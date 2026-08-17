@@ -1,69 +1,202 @@
-import Image from "next/image";
+import type { Metadata } from "next";
+import { ArrowRight, CheckCircle2, ClipboardCheck, ShieldCheck, Snowflake, Truck } from "lucide-react";
+import { getFoodsCatalogListItems } from "@/services/catalog";
+import { SectionHeading } from "@/components/layout/section-heading";
+import { FoodsLink } from "@/components/pages/foods-link";
+import { FoodsProductCard } from "@/components/pages/foods-product-card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: "Agro Commodities & Food Products Exports from India",
+  description:
+    "Source certified Indian spices, cereals, pulses, oilseeds, and processed agro foods with batch testing, container consolidation, and export logistics.",
+};
+
+const HERO_CATEGORIES = [
+  "Spices & Herbs",
+  "Nuts & Dry Fruits",
+  "Oilseeds & Oils",
+  "Cereals & Grains",
+  "Pulses & Lentils",
+  "Dehydrated & Processed",
+] as const;
+
+export default function FoodsHomePage() {
+  const all = getFoodsCatalogListItems();
+
+  const featured: typeof all = [];
+  const used = new Set<string>();
+
+  for (const cat of HERO_CATEGORIES) {
+    const pick = all.find((p) => p.category === cat);
+    if (pick && !used.has(pick.slug)) {
+      featured.push(pick);
+      used.add(pick.slug);
+    }
+  }
+
+  for (const p of all) {
+    if (featured.length >= 6) break;
+    if (used.has(p.slug)) continue;
+    featured.push(p);
+    used.add(p.slug);
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <section
+        className="relative overflow-hidden border-b border-border"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at top right, color-mix(in srgb, var(--food) 26%, transparent), transparent 55%), radial-gradient(circle at bottom left, color-mix(in srgb, var(--accent) 14%, transparent), transparent 55%), linear-gradient(120deg, color-mix(in srgb, var(--primary) 85%, black) 0%, var(--primary) 55%, var(--accent) 100%)",
+        }}
+      >
+        <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(9,18,33,0.28),rgba(9,18,33,0.28))]" />
+        <div className="container-shell relative pb-16 pt-20 sm:pb-20 sm:pt-24 lg:pb-24 lg:pt-28">
+          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+            <div className="space-y-7 text-white">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/75">
+                Foods &amp; Agriculture Export Division
+              </p>
+              <h1 className="text-[2.25rem] font-extrabold leading-[1.06] tracking-tight sm:text-[3.1rem] lg:text-[3.85rem]">
+                Export-ready Indian foods — built for compliance and delivery
+              </h1>
+              <p className="max-w-2xl text-base text-white/88 sm:text-lg">
+                Shortlist from the catalogue, add items to your RFQ list, and send one consolidated request. We align grades,
+                packaging, documentation, and shipment planning for executable quotes.
+              </p>
+
+              <div className="flex flex-wrap gap-3">
+                <Button asChild size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
+                  <FoodsLink href="/catalog">
+                    Browse Catalogue <ArrowRight className="ml-1 size-4" />
+                  </FoodsLink>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="border-white/55 bg-transparent text-white hover:bg-white/10"
+                >
+                  <FoodsLink href="/rfq">Send RFQ</FoodsLink>
+                </Button>
+              </div>
+
+              <div className="flex flex-wrap gap-2 text-xs text-white/90">
+                {["Traceability mindset", "Residue alignment", "Cold-chain options", "Batch QC", "Documentation ready"].map(
+                  (badge) => (
+                    <span key={badge} className="rounded-full border border-white/25 bg-white/10 px-3 py-1">
+                      {badge}
+                    </span>
+                  ),
+                )}
+              </div>
+            </div>
+
+            <aside className="space-y-4">
+              <article className="elevated-card overflow-hidden rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md">
+                <div
+                  className="h-65 w-full bg-cover bg-center sm:h-80"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(180deg, rgba(7,18,35,0.08) 0%, rgba(7,18,35,0.76) 100%), url(https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=2000&q=80)",
+                  }}
+                  aria-hidden
+                />
+                <div className="p-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">Catalogue-first, RFQ-led</p>
+                  <p className="mt-2 text-2xl font-semibold text-white">Fresh + shelf-stable supply programs</p>
+                  <p className="mt-2 text-sm text-white/85">
+                    Use the catalogue to shortlist items across spices, grains, nuts, pulses, dehydrated formats, and seasonal fresh.
+                  </p>
+                </div>
+              </article>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                {[{ icon: ShieldCheck, label: "Compliance discipline" }, { icon: Truck, label: "Shipment readiness" }, { icon: Snowflake, label: "Cold-chain handling" }, { icon: ClipboardCheck, label: "Documentation control" }].map(
+                  ({ icon: Icon, label }) => (
+                    <div key={label} className="rounded-xl border border-white/20 bg-white/10 p-4 text-white backdrop-blur-md">
+                      <div className="flex items-center gap-2">
+                        <Icon className="size-5 text-secondary" />
+                        <p className="text-sm font-semibold">{label}</p>
+                      </div>
+                      <p className="mt-2 text-xs text-white/78">Built for buyer clarity and predictable outcomes.</p>
+                    </div>
+                  ),
+                )}
+              </div>
+            </aside>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <section className="section-space">
+        <div className="container-shell">
+          <SectionHeading
+            eyebrow="Featured"
+            title="Start with high-demand, high-repeat categories"
+            subtitle="A curated entry set — expand in the catalogue by category, form, origin, and certifications."
+          />
+
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {featured.map((product) => (
+              <FoodsProductCard key={product.id} product={product} />
+            ))}
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="section-space bg-muted/40">
+        <div className="container-shell">
+          <SectionHeading
+            eyebrow="How It Works"
+            title="A sourcing flow designed for export execution"
+            subtitle="We align specs, documentation, and shipment planning — so procurement stays controlled."
+          />
+
+          <div className="grid gap-4 lg:grid-cols-4">
+            {[
+              {
+                title: "Shortlist",
+                detail: "Browse the catalogue and shortlist items by category, form, and origin.",
+              },
+              {
+                title: "Specify",
+                detail: "Share destination market, incoterms, packaging, and compliance requirements.",
+              },
+              {
+                title: "Validate",
+                detail: "We align grade, batch QC options, and documentation readiness for the destination.",
+              },
+              {
+                title: "Deliver",
+                detail: "Shipment planning aligned to shelf-life and route risk, with clear milestones.",
+              },
+            ].map((step) => (
+              <Card key={step.title} className="elevated-card overflow-hidden">
+                <div className="h-1.5 w-full bg-primary/15" aria-hidden />
+                <CardContent className="p-5">
+                  <p className="text-lg font-semibold">{step.title}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">{step.detail}</p>
+                  <div className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-primary">
+                    <CheckCircle2 className="size-4" /> Execution-led
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+              <FoodsLink href="/catalog">Explore Full Catalogue</FoodsLink>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <FoodsLink href="/rfq">Build an RFQ</FoodsLink>
+            </Button>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
