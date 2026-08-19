@@ -45,22 +45,17 @@ export default function FoodsHomePage() {
 
   return (
     <>
-      <section
-        className="relative overflow-hidden border-b border-border"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at top right, color-mix(in srgb, var(--food) 26%, transparent), transparent 55%), radial-gradient(circle at bottom left, color-mix(in srgb, var(--accent) 14%, transparent), transparent 55%), linear-gradient(120deg, color-mix(in srgb, var(--primary) 85%, black) 0%, var(--primary) 55%, var(--accent) 100%)",
-        }}
-      >
-        <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(9,18,33,0.28),rgba(9,18,33,0.28))]" />
+      <section className="relative isolate overflow-hidden border-b border-white/10 bg-botanical-gradient">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_8%,color-mix(in_srgb,var(--brand-gold)_22%,transparent),transparent_32%),radial-gradient(circle_at_12%_88%,color-mix(in_srgb,var(--brand-signal)_18%,transparent),transparent_38%)]" />
+        <div className="absolute inset-0 opacity-[0.055] [background-image:linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] [background-size:52px_52px]" />
         <div className="container-shell relative pb-16 pt-20 sm:pb-20 sm:pt-24 lg:pb-24 lg:pt-28">
           <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
             <div className="space-y-7 text-white">
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/75">
                 Foods &amp; Agriculture Export Division
               </p>
-              <h1 className="text-[2.25rem] font-extrabold leading-[1.06] tracking-tight sm:text-[3.1rem] lg:text-[3.85rem]">
-                Export-ready Indian foods — built for compliance and delivery
+              <h1 className="text-[2.25rem] font-extrabold leading-[1.06] tracking-[-0.045em] sm:text-[3.1rem] lg:text-[3.85rem]">
+                Export-ready Indian foods — <span className="text-brand-gold">built for compliance and delivery</span>
               </h1>
               <p className="max-w-2xl text-base text-white/88 sm:text-lg">
                 Shortlist from the catalogue, add items to your RFQ list, and send one consolidated request. We align grades,
@@ -68,7 +63,7 @@ export default function FoodsHomePage() {
               </p>
 
               <div className="flex flex-wrap gap-3">
-                <Button asChild size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
+                <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
                   <FoodsLink href="/catalog">
                     Browse Catalogue <ArrowRight className="ml-1 size-4" />
                   </FoodsLink>
@@ -118,7 +113,7 @@ export default function FoodsHomePage() {
                   ({ icon: Icon, label }) => (
                     <div key={label} className="rounded-xl border border-white/20 bg-white/10 p-4 text-white backdrop-blur-md">
                       <div className="flex items-center gap-2">
-                        <Icon className="size-5 text-secondary" />
+                        <Icon className="size-5 text-brand-gold" />
                         <p className="text-sm font-semibold">{label}</p>
                       </div>
                       <p className="mt-2 text-xs text-white/78">Built for buyer clarity and predictable outcomes.</p>
@@ -147,7 +142,7 @@ export default function FoodsHomePage() {
         </div>
       </section>
 
-      <section className="section-space bg-muted/40">
+      <section className="section-space bg-brand-surface">
         <div className="container-shell">
           <SectionHeading
             eyebrow="How It Works"

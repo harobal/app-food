@@ -11,7 +11,9 @@ export const foodsTheme = {
   displayName: "Harobal Foods",
 
   /** Primary accent color for the Foods vertical */
-  accentColor: "#2f855a",
+  accentColor: "#2E6B55",
+  signalColor: "#6E9C62",
+  premiumColor: "#C99132",
   cssVariable: "--food",
 
   /** Motion personality */

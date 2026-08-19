@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { brand } from "@/content/site";
+import HarobalLogo from "@/brand/Logo";
 import { FoodsLink } from "@/components/pages/foods-link";
 import { siteConfig } from "@/config/site";
 import { buildTelHref, buildWhatsAppHref } from "@/lib/contact-links";
@@ -12,24 +12,11 @@ export function FoodsFooter() {
   const whatsappHref = buildWhatsAppHref(brand.whatsapp);
 
   return (
-    <footer
-      className="border-t border-white/10 text-white"
-      style={{
-        backgroundImage:
-          "radial-gradient(circle at top left, color-mix(in srgb, var(--food) 28%, transparent), transparent 55%), radial-gradient(circle at bottom right, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%), linear-gradient(130deg, color-mix(in srgb, var(--primary) 80%, black), var(--primary) 55%, var(--accent) 100%)",
-      }}
-    >
+    <footer className="border-t border-white/10 bg-botanical-gradient text-white">
       <div className="container-shell grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
-          <div className="w-fit rounded-md border border-white/15 bg-white/5 px-3 py-2">
-            <Image
-              src="/brand/logo-wordmark-light.png"
-              alt={brand.name}
-              width={260}
-              height={72}
-              sizes="(max-width: 640px) 200px, 240px"
-              className="h-10 w-auto sm:h-11"
-            />
+          <div className="w-fit rounded-md border border-white/15 bg-white/5 px-4 py-3">
+            <HarobalLogo variant="dark-horizontal" size="sm" showDescriptor />
           </div>
           <p className="text-sm text-white/85">
             Export-ready foods and agri supply for importers, distributors, and retail procurement teams — structured around traceability, compliance discipline, and shipment-ready execution.
@@ -41,7 +28,7 @@ export function FoodsFooter() {
             href={siteConfig.primarySiteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center text-sm font-semibold text-white/85 hover:text-secondary"
+            className="inline-flex items-center text-sm font-semibold text-white/85 hover:text-brand-gold"
           >
             Visit Harobal Ventures (Main site)
           </a>

@@ -1,15 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, ExternalLink, Menu, X } from "lucide-react";
+import { ChevronDown, ExternalLink, Menu } from "lucide-react";
 import { foodsNav } from "@/content";
-import { brand } from "@/content/site";
 import { Button } from "@/components/ui/button";
 import { FoodsLink } from "@/components/pages/foods-link";
+import HarobalLogo from "@/brand/Logo";
 import { useFoodsQuoteRequest } from "@/providers/quote-request-provider";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
+import { MobileNavSheet } from "@/components/layout/mobile-nav-sheet";
 
 function DesktopNavDropdown({
   label,
@@ -40,7 +40,7 @@ function DesktopNavDropdown({
     <div ref={containerRef} className="relative">
       <button
         type="button"
-        className="inline-flex items-center gap-1 text-sm font-medium text-foreground/88 transition-colors hover:text-primary"
+        className="inline-flex h-10 items-center gap-1 rounded-md px-4 text-sm font-medium text-foreground/88 transition-colors hover:bg-muted hover:text-primary"
         onClick={() => setOpen((prev) => !prev)}
         aria-haspopup="menu"
         aria-expanded={open}
@@ -53,7 +53,7 @@ function DesktopNavDropdown({
         <div
           role="menu"
           aria-label={label}
-          className="absolute left-0 top-full z-50 mt-2 w-64 rounded-xl border border-border bg-background p-1"
+          className="absolute left-0 top-full z-50 mt-1.5 w-64 rounded-md border border-border bg-background p-1 shadow-lg"
         >
           {items.map((item) => (
             <FoodsLink
@@ -77,26 +77,15 @@ export function FoodsHeader() {
   const { count } = useFoodsQuoteRequest();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/70 bg-background/88 backdrop-blur-xl supports-backdrop-filter:bg-background/78">
-      <div
-        className="h-0.5 w-full"
-        style={{
-          backgroundImage:
-            "linear-gradient(90deg, var(--food), color-mix(in srgb, var(--secondary) 75%, transparent), var(--accent))",
-        }}
-        aria-hidden
-      />
+    <header className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/80 backdrop-blur-md supports-backdrop-filter:bg-background/78">
+      <div className="h-0.5 w-full bg-brand-gradient" aria-hidden />
 
-      <div className="container-shell flex h-16 items-center justify-between gap-4">
-        <FoodsLink href="/" className="flex min-w-fit items-center gap-3" onClick={() => setOpen(false)}>
-          <Image src="/brand/logo-mark.png" alt={brand.name} width={38} height={38} priority className="h-9 w-9" />
-          <div className="leading-tight">
-            <p className="font-heading text-base font-bold tracking-wide text-primary sm:text-lg">{brand.name}</p>
-            <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">Foods &amp; Agriculture</p>
-          </div>
+      <div className="container-shell flex h-16 items-center justify-between gap-3">
+        <FoodsLink href="/" className="flex min-w-fit items-center" onClick={() => setOpen(false)} aria-label="Harobal Foods home">
+          <HarobalLogo variant="horizontal" size="sm" showDescriptor />
         </FoodsLink>
 
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="hidden flex-1 items-center justify-center gap-1 xl:flex">
           {foodsNav.map((item) =>
             item.type === "dropdown" ? (
               <DesktopNavDropdown key={item.label} label={item.label} items={item.items} />
@@ -104,7 +93,7 @@ export function FoodsHeader() {
               <FoodsLink
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium text-foreground/88 transition-colors hover:text-primary"
+                className="inline-flex h-10 items-center rounded-md px-4 text-sm font-medium text-foreground/88 transition-colors hover:bg-muted hover:text-primary"
               >
                 {item.label}
               </FoodsLink>
@@ -112,16 +101,16 @@ export function FoodsHeader() {
           )}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden shrink-0 items-center gap-4 xl:flex">
           <a
             href={siteConfig.primarySiteUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1 rounded-md border border-border bg-muted/30 px-2.5 py-2 text-xs font-semibold text-muted-foreground hover:text-primary"
+            className="inline-flex h-10 items-center gap-1 rounded-md px-4 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
           >
             Main site <ExternalLink className="size-3.5" />
           </a>
-          <Button asChild size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
+          <Button asChild className="whitespace-nowrap bg-accent text-accent-foreground hover:bg-accent/90">
             <FoodsLink href="/rfq">
               Send RFQ
               {count > 0 ? (
@@ -140,29 +129,29 @@ export function FoodsHeader() {
 
         <button
           type="button"
-          className="inline-flex rounded-md border border-border p-2 lg:hidden"
+          className="inline-flex size-10 shrink-0 items-center justify-center rounded-md transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring xl:hidden"
           onClick={() => setOpen((prev) => !prev)}
           aria-label={open ? "Close menu" : "Open menu"}
         >
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          <Menu className="size-6" />
         </button>
       </div>
 
-      {open ? (
-        <div className="border-t border-border bg-background/96 lg:hidden">
-          <div className="container-shell flex flex-col gap-2 py-4">
+      <MobileNavSheet open={open} onOpenChange={setOpen} label="Harobal Foods navigation">
+          <div className="mt-6 flex flex-col space-y-6">
+            <nav className="flex flex-col space-y-3">
             {foodsNav.map((item) =>
               item.type === "dropdown" ? (
-                <div key={item.label} className="rounded-xl border border-border bg-card p-2">
+                <div key={item.label}>
                   <p className="px-2 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                     {item.label}
                   </p>
-                  <div className="mt-1">
+                  <div className="mt-1 flex flex-col">
                     {item.items.map((child) => (
                       <FoodsLink
                         key={child.href}
                         href={child.href}
-                        className="block rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted"
+                        className="rounded-md px-3 py-2 text-base font-medium transition-colors hover:bg-muted"
                         onClick={() => setOpen(false)}
                       >
                         {child.label}
@@ -174,35 +163,32 @@ export function FoodsHeader() {
                 <FoodsLink
                   key={item.href}
                   href={item.href}
-                  className="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted"
+                  className="rounded-md px-3 py-2.5 text-lg font-medium transition-colors hover:bg-muted"
                   onClick={() => setOpen(false)}
                 >
                   {item.label}
                 </FoodsLink>
               ),
             )}
+            </nav>
 
-            <div className="mt-2 grid gap-2 px-3 sm:grid-cols-2">
+            <div className="flex flex-col gap-3 border-t border-border pt-4">
               <a
                 href={siteConfig.primarySiteUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-1 rounded-md border border-border bg-muted/30 px-3 py-2 text-sm font-semibold text-muted-foreground hover:text-primary"
+                className="inline-flex h-12 items-center justify-center gap-1 rounded-md border border-border bg-background px-4 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
               >
                 Main site <ExternalLink className="size-4" />
               </a>
-            </div>
-
-            <div className="mt-2 px-3">
-              <Button asChild className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90">
+              <Button asChild className="h-12 w-full bg-accent text-accent-foreground hover:bg-accent/90">
                 <FoodsLink href="/rfq" onClick={() => setOpen(false)}>
                   Send RFQ {count > 0 ? `(${count})` : ""}
                 </FoodsLink>
               </Button>
             </div>
           </div>
-        </div>
-      ) : null}
+      </MobileNavSheet>
     </header>
   );
 }

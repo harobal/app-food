@@ -4,41 +4,79 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * HAROBAL FOODS — Harvest Grove Theme
+ *
+ * Brand idea:
+ *   Forest Ink   → trust / provenance / depth
+ *   Grove Green  → food / agriculture / freshness
+ *   Leaf Signal  → growth / natural vitality
+ *   Harvest Gold → quality / value / trade
+ *
+ * This theme preserves the Harobal design-system structure while giving
+ * Foods a distinct botanical + premium identity.
+ */
+
 @theme inline {
+  /* Semantic shadcn / Tailwind tokens */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Charts */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Harobal Foods brand colors */
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-signal: var(--brand-signal);
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-harvest: var(--brand-harvest);
+  --color-brand-canvas: var(--brand-canvas);
+  --color-brand-mist: var(--brand-mist);
+
+  /* Harobal portfolio accents */
+  --color-domain-food: var(--domain-food);
+  --color-domain-energy: var(--domain-energy);
+  --color-domain-stones: var(--domain-stones);
+  --color-domain-industrial: var(--domain-industrial);
+  --color-domain-crafts: var(--domain-crafts);
+
+  /* Typography */
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
+
+  /* Radius scale */
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -49,103 +87,229 @@
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #1a202c;
-  --card: #ffffff;
-  --card-foreground: #1a202c;
-  --popover: #ffffff;
-  --popover-foreground: #1a202c;
-  --primary: #1a365d;
+  color-scheme: light;
+
+  /* HAROBAL FOODS — HARVEST GROVE */
+  --brand-ink: #132f2a;
+  --brand-primary: #2e6b55;
+  --brand-signal: #6e9c62;
+  --brand-gold: #c99132;
+  --brand-harvest: #c99132;
+  --brand-canvas: #fcf9f2;
+  --brand-mist: #e6ece2;
+
+  /* Derived brand surfaces */
+  --brand-primary-soft: #e8f0eb;
+  --brand-signal-soft: #edf3e8;
+  --brand-gold-soft: #f7edd9;
+  --brand-ink-soft: #dfe8e2;
+
+  /* SEMANTIC UI — LIGHT */
+  --background: #fcf9f2;
+  --foreground: #132f2a;
+  --card: #fffdf9;
+  --card-foreground: #132f2a;
+  --popover: #fffdf9;
+  --popover-foreground: #132f2a;
+
+  --primary: #2e6b55;
   --primary-foreground: #ffffff;
-  --secondary: #d4a843;
-  --secondary-foreground: #1a202c;
-  --muted: #f7fafc;
-  --muted-foreground: #4a5568;
-  --accent: #2c7a7b;
-  --accent-foreground: #ffffff;
+
+  /* Keep secondary quiet; Harvest Gold is reserved for premium emphasis. */
+  --secondary: #e8f0eb;
+  --secondary-foreground: #17372f;
+  --muted: #f0f1e9;
+  --muted-foreground: #5e6f67;
+  --accent: #c99132;
+  --accent-foreground: #132f2a;
   --destructive: #b42318;
-  --border: #dce3ec;
-  --input: #dce3ec;
-  --ring: #2c7a7b;
-  --chart-1: #1a365d;
-  --chart-2: #2c7a7b;
-  --chart-3: #d4a843;
-  --chart-4: #2f855a;
-  --chart-5: #6b46c1;
+  --border: #dbe4d9;
+  --input: #dbe4d9;
+  --ring: #6e9c62;
+
+  /* Data viz — botanical + harvest spectrum */
+  --chart-1: #2e6b55;
+  --chart-2: #6e9c62;
+  --chart-3: #c99132;
+  --chart-4: #b56b45;
+  --chart-5: #5e7c78;
+
   --radius: 0.5rem;
-  --sidebar: #f7fafc;
-  --sidebar-foreground: #1a202c;
-  --sidebar-primary: #1a365d;
+
+  /* Sidebar / navigation */
+  --sidebar: #f7f5ee;
+  --sidebar-foreground: #132f2a;
+  --sidebar-primary: #2e6b55;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e8eff6;
-  --sidebar-accent-foreground: #1a365d;
-  --sidebar-border: #dce3ec;
-  --sidebar-ring: #2c7a7b;
+  --sidebar-accent: #e7eee7;
+  --sidebar-accent-foreground: #17372f;
+  --sidebar-border: #d9e1d7;
+  --sidebar-ring: #6e9c62;
 
-  --stone: #8b6914;
-  --food: #2f855a;
-  --electrical: #2b6cb0;
-  --industrial: #4a5568;
-  --crafts: #6b46c1;
+  /* Portfolio taxonomy — these are cross-brand references, not UI primaries. */
+  --domain-food: #2e6b55;
+  --domain-energy: #2878b5;
+  --domain-stones: #75624f;
+  --domain-industrial: #596874;
+  --domain-crafts: #765b91;
 
+  /* Backward-compatible aliases */
+  --food: var(--domain-food);
+  --electrical: var(--domain-energy);
+  --stone: var(--domain-stones);
+  --industrial: var(--domain-industrial);
+  --crafts: var(--domain-crafts);
+
+  /* SIGNATURE GRADIENTS */
+  --gradient-brand: linear-gradient(
+    135deg,
+    #132f2a 0%,
+    #2e6b55 42%,
+    #6e9c62 76%,
+    #c99132 100%
+  );
+  --gradient-botanical: linear-gradient(135deg, #132f2a 0%, #2e6b55 52%, #6e9c62 100%);
+  --gradient-signal: linear-gradient(135deg, #2e6b55 0%, #6e9c62 100%);
+  --gradient-metal: linear-gradient(135deg, #9e6f24 0%, #c99132 50%, #e7c879 100%);
+  --gradient-surface: linear-gradient(180deg, #fffdf9 0%, #fcf9f2 100%);
+  --gradient-hero-wash: radial-gradient(
+      circle at 12% 12%,
+      color-mix(in srgb, #6e9c62 16%, transparent) 0%,
+      transparent 36%
+    ),
+    radial-gradient(
+      circle at 86% 4%,
+      color-mix(in srgb, #c99132 13%, transparent) 0%,
+      transparent 31%
+    ),
+    linear-gradient(180deg, #fffdf8 0%, #f8f6ee 100%);
+
+  /* Ambient effects */
+  --brand-glow: 0 18px 60px color-mix(in srgb, var(--brand-primary) 13%, transparent);
+  --brand-glow-strong: 0 24px 80px color-mix(in srgb, var(--brand-signal) 20%, transparent);
+
+  /* Selection + scrollbar */
+  --selection: color-mix(in srgb, var(--brand-signal) 30%, transparent);
   --scrollbar-track: transparent;
-  --scrollbar-thumb: color-mix(in srgb, var(--primary) 28%, var(--border));
-  --scrollbar-thumb-hover: color-mix(in srgb, var(--secondary) 45%, var(--primary));
-  --scrollbar-thumb-active: color-mix(in srgb, var(--secondary) 58%, var(--primary));
+  --scrollbar-thumb: color-mix(in srgb, var(--brand-primary) 30%, var(--border));
+  --scrollbar-thumb-hover: color-mix(in srgb, var(--brand-signal) 50%, var(--brand-primary));
+  --scrollbar-thumb-active: color-mix(in srgb, var(--brand-gold) 50%, var(--brand-primary));
 }
 
 .dark {
-  --background: #0e1b2e;
-  --foreground: #edf2f7;
-  --card: #13223a;
-  --card-foreground: #edf2f7;
-  --popover: #13223a;
-  --popover-foreground: #edf2f7;
-  --primary: #d4a843;
-  --primary-foreground: #111827;
-  --secondary: #24415f;
-  --secondary-foreground: #edf2f7;
-  --muted: #1a2b45;
-  --muted-foreground: #b8c2ce;
-  --accent: #2c7a7b;
-  --accent-foreground: #ffffff;
-  --destructive: #f97066;
-  --border: #324663;
-  --input: #324663;
-  --ring: #d4a843;
-  --chart-1: #d4a843;
-  --chart-2: #2c7a7b;
-  --chart-3: #63b3ed;
-  --chart-4: #68d391;
-  --chart-5: #b794f4;
-  --sidebar: #101f35;
-  --sidebar-foreground: #edf2f7;
-  --sidebar-primary: #d4a843;
-  --sidebar-primary-foreground: #111827;
-  --sidebar-accent: #1f3556;
-  --sidebar-accent-foreground: #edf2f7;
-  --sidebar-border: #324663;
-  --sidebar-ring: #d4a843;
+  color-scheme: dark;
 
+  /* Lift chroma/lightness for dark surfaces without changing brand identity. */
+  --brand-ink: #132f2a;
+  --brand-primary: #76b79a;
+  --brand-signal: #a6c98c;
+  --brand-gold: #dab15a;
+  --brand-harvest: #dab15a;
+  --brand-canvas: #0a1815;
+  --brand-mist: #29443a;
+
+  --brand-primary-soft: #183a30;
+  --brand-signal-soft: #263e2d;
+  --brand-gold-soft: #3b311d;
+  --brand-ink-soft: #183029;
+
+  /* SEMANTIC UI — DARK */
+  --background: #0a1815;
+  --foreground: #f3f5ed;
+  --card: #10231d;
+  --card-foreground: #f3f5ed;
+  --popover: #10231d;
+  --popover-foreground: #f3f5ed;
+  --primary: #76b79a;
+  --primary-foreground: #0b1d17;
+  --secondary: #19372e;
+  --secondary-foreground: #eef5ef;
+  --muted: #142e26;
+  --muted-foreground: #aebdb4;
+  --accent: #dab15a;
+  --accent-foreground: #1b241d;
+  --destructive: #ff746c;
+  --border: #29483c;
+  --input: #315346;
+  --ring: #a6c98c;
+
+  --chart-1: #76b79a;
+  --chart-2: #a6c98c;
+  --chart-3: #dab15a;
+  --chart-4: #d58a67;
+  --chart-5: #8cb0ac;
+
+  --sidebar: #0c1e19;
+  --sidebar-foreground: #f3f5ed;
+  --sidebar-primary: #76b79a;
+  --sidebar-primary-foreground: #0b1d17;
+  --sidebar-accent: #17352c;
+  --sidebar-accent-foreground: #eef5ef;
+  --sidebar-border: #27463a;
+  --sidebar-ring: #a6c98c;
+
+  /* Portfolio accents lifted for dark surfaces */
+  --domain-food: #76b79a;
+  --domain-energy: #67aee1;
+  --domain-stones: #c3a184;
+  --domain-industrial: #91a1ad;
+  --domain-crafts: #aa8bc2;
+
+  --food: var(--domain-food);
+  --electrical: var(--domain-energy);
+  --stone: var(--domain-stones);
+  --industrial: var(--domain-industrial);
+  --crafts: var(--domain-crafts);
+
+  --gradient-brand: linear-gradient(
+    135deg,
+    #0a1815 0%,
+    #245746 38%,
+    #76b79a 74%,
+    #dab15a 108%
+  );
+  --gradient-botanical: linear-gradient(135deg, #0a1815 0%, #245746 50%, #76b79a 100%);
+  --gradient-signal: linear-gradient(135deg, #3f8066 0%, #a6c98c 100%);
+  --gradient-metal: linear-gradient(135deg, #9f782e 0%, #dab15a 52%, #efd48f 100%);
+  --gradient-surface: linear-gradient(180deg, #132820 0%, #0c1e19 100%);
+  --gradient-hero-wash: radial-gradient(
+      circle at 12% 8%,
+      color-mix(in srgb, #76b79a 16%, transparent) 0%,
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 86% 2%,
+      color-mix(in srgb, #dab15a 11%, transparent) 0%,
+      transparent 28%
+    ),
+    linear-gradient(180deg, #0d1d19 0%, #0a1815 100%);
+
+  --brand-glow: 0 18px 65px color-mix(in srgb, var(--brand-primary) 13%, transparent);
+  --brand-glow-strong: 0 26px 90px color-mix(in srgb, var(--brand-signal) 18%, transparent);
+
+  --selection: color-mix(in srgb, var(--brand-signal) 34%, transparent);
   --scrollbar-track: transparent;
-  --scrollbar-thumb: color-mix(in srgb, var(--secondary) 24%, var(--border));
-  --scrollbar-thumb-hover: color-mix(in srgb, var(--primary) 42%, var(--secondary));
-  --scrollbar-thumb-active: color-mix(in srgb, var(--primary) 58%, var(--secondary));
+  --scrollbar-thumb: color-mix(in srgb, var(--brand-primary) 28%, var(--border));
+  --scrollbar-thumb-hover: color-mix(in srgb, var(--brand-signal) 52%, var(--brand-primary));
+  --scrollbar-thumb-active: color-mix(in srgb, var(--brand-gold) 48%, var(--brand-primary));
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "liga" 1, "calt" 1;
-  }
+
   html {
     @apply font-sans;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
     scrollbar-gutter: stable;
     scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "liga" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
   }
 
   h1,
@@ -155,10 +319,11 @@
   h5,
   h6 {
     @apply font-heading;
+    text-wrap: balance;
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--secondary) 55%, transparent);
+    background: var(--selection);
     color: var(--foreground);
   }
 
@@ -205,5 +370,53 @@
 
   .elevated-card {
     @apply shadow-sm;
+    box-shadow: var(--brand-glow);
+  }
+}
+
+@layer utilities {
+  .bg-brand-gradient,
+  .bg-food-gradient {
+    background-image: var(--gradient-brand);
+  }
+
+  .bg-botanical-gradient {
+    background-image: var(--gradient-botanical);
+  }
+
+  .bg-signal-gradient {
+    background-image: var(--gradient-signal);
+  }
+
+  .bg-metal-gradient {
+    background-image: var(--gradient-metal);
+  }
+
+  .bg-brand-surface {
+    background-image: var(--gradient-surface);
+  }
+
+  .bg-hero-wash {
+    background-image: var(--gradient-hero-wash);
+  }
+
+  .text-brand-gradient {
+    background-image: linear-gradient(
+      90deg,
+      var(--brand-primary),
+      var(--brand-signal),
+      var(--brand-gold)
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .brand-glow {
+    box-shadow: var(--brand-glow);
+  }
+
+  .brand-glow-strong {
+    box-shadow: var(--brand-glow-strong);
   }
 }

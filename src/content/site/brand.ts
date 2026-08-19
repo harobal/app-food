@@ -1,9 +1,9 @@
 export const brand = {
-  name: "Harobal Ventures",
+  name: "Harobal Foods",
   legalName: "Harobal Ventures Global Trading LLP",
-  tagline: "Reliable Indian Sourcing for Global Markets",
+  tagline: "Export-ready foods and agriculture",
   shortDescription:
-    "Harobal Ventures is a global trading & sourcing house supporting buyers around the globe with disciplined procurement, compliant execution, and dependable delivery coordination.",
+    "Harobal Foods supports global buyers with export-ready food and agricultural sourcing, traceability, compliance, and shipment execution.",
   email: "info@harobalventures.com",
   salesEmail: "sales@harobalventures.com",
   phone: "+91 90000 00000",

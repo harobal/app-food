@@ -1,35 +1,33 @@
-
 // ─────────────────────────────────────────────────────────
-// COLOR PALETTE
+// COLOR PALETTE (app-food)
 // ─────────────────────────────────────────────────────────
-
 
 export const COLORS = {
-  /** Primary identity — dominant navy */
-  navy:           "#1B2A4A",
-  /** Main accent — gold highlight */
-  gold:           "#D4A03C",
-  /** Light neutral — cream for dark backgrounds */
-  cream:          "#F5F0E8",
-  /** Secondary support — muted blue-grey */
-  blueMid:  "#6D7F9E",
-  /** Tertiary tone — light blue-grey */
-  blueLight:  "#8A9AB8",
-  /** Dark-mode base background */
-  darkNavy:       "#0F1A2E",
+  /** Forest Ink — provenance, depth, and master wordmark */
+  primary:        "#132F2A",
+  /** Grove Green — the Foods domain identity */
+  accent:         "#2E6B55",
+  /** Warm botanical canvas */
+  lightBg:        "#FCF9F2",
+  /** Leaf Signal — freshness and growth */
+  secondary:      "#6E9C62",
+  /** Harvest Gold — premium support */
+  tertiary:       "#C99132",
+  /** Deep botanical background */
+  darkBg:         "#0A1815",
   /** Utility */
   white:          "#FFFFFF",
   black:          "#000000",
   // Derived semi-transparents
-  navyA10:      "rgba(27,42,74,0.10)",
-  navyA06:      "rgba(27,42,74,0.06)",
-  navyA04:      "rgba(27,42,74,0.04)",
-  goldA20:      "rgba(212,160,60,0.20)",
-  goldA12:      "rgba(212,160,60,0.12)",
-  goldA06:      "rgba(212,160,60,0.06)",
-  whiteA10:     "rgba(255,255,255,0.10)",
-  whiteA06:     "rgba(255,255,255,0.06)",
-  creamA08:     "rgba(245,240,232,0.08)",
+  primaryA10:     "rgba(19,47,42,0.10)",
+  primaryA06:     "rgba(19,47,42,0.06)",
+  primaryA04:     "rgba(19,47,42,0.04)",
+  accentA20:      "rgba(46,107,85,0.20)",
+  accentA12:      "rgba(46,107,85,0.12)",
+  accentA06:      "rgba(46,107,85,0.06)",
+  whiteA10:       "rgba(255,255,255,0.10)",
+  whiteA06:       "rgba(255,255,255,0.06)",
+  lightBgA08:     "rgba(252,249,242,0.08)",
 } as const;
 
 export type BrandColor = keyof typeof COLORS;
@@ -46,21 +44,15 @@ export const FONTS = {
 } as const;
 
 export const LETTER_SPACING = {
-  /** "HAROBAL" */
   wordmark:   "0.22em",
-  /** "VENTURES" */
   ventures:   "0.35em",
-  /** "THE GLOBAL TRADING HOUSE" */
   descriptor: "0.38em",
-
   nav:        "0.10em",
   badge:      "0.08em",
 } as const;
 
-/** Ratio of Harobal Font Size to Symbol Width */
 export const HAROBAL_SIZE_RATIO = 0.32;
 
-// Proportional ratios relative to HAROBAL nameSize
 export const RATIO = {
   ventures:   0.46,
   descriptor: 0.27,
@@ -74,9 +66,7 @@ export const RATIO = {
 export type LogoSizeKey = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 
 export interface SizePreset {
-  /** Width of the H+Handshake SVG mark in px */
   symbolWidth: number;
-  /** Font-size for "HAROBAL" in px */
   nameSize: number;
 }
 
@@ -94,103 +84,91 @@ export function resolveSize(size: LogoSizeKey | number): SizePreset {
   return SIZE_PRESETS[size] ?? SIZE_PRESETS.lg;
 }
 
-
 // ─────────────────────────────────────────────────────────
 // LOGO VARIANTS
 // ─────────────────────────────────────────────────────────
 
 export type LogoVariant =
-  | "primary"            // 1  — stacked, full color, light bg
-  | "compact"        // stacked, tight spacing
-  | "horizontal"         // 2  — horizontal, full color, light bg
-  | "alternate-stacked"  // 3  — stacked compact
-  | "icon-plain"     // symbol on white card
-  | "icon-light"          // 4  — symbol on white rounded square
-  | "icon-circle"        // 5  — symbol in circle with gold ring
-  | "icon-square"        // 6  — symbol in navy rounded square
-  | "mono-navy"    // 7  — single navy color
-  | "mono-black"   // 8  — single black color
-  | "mono-white"   // 9  — white on black bg
-  | "mono-gold"    // 10 — single gold color
-  | "dark"               // 11 — cream+gold on dark navy bg
-  | "dark-horizontal"     // 11b — horizontal variant of dark mode
-  | "app-square"     // 12a — app icon, navy square
-  | "app-circle"     // 12b — app icon, circle + gold ring
-  | "app-light"      // 12c — app icon, white square
-  | "app-plain"      // 12d — app icon, plain no container
-  | "favicon"            // 13a — favicon, dark square
-  | "favicon-light"      // 13b — favicon, light/plain
-  | "wordmark"           // 14a — wordmark only, full color, light
-  | "wordmark-dark";     // 14b — wordmark only, dark version
-
+  | "primary"
+  | "compact"
+  | "horizontal"
+  | "alternate-stacked"
+  | "icon-plain"
+  | "icon-light"
+  | "icon-circle"
+  | "icon-square"
+  | "mono-primary"
+  | "mono-black"
+  | "mono-white"
+  | "mono-accent"
+  | "dark"
+  | "dark-horizontal"
+  | "app-square"
+  | "app-circle"
+  | "app-light"
+  | "app-plain"
+  | "favicon"
+  | "favicon-light"
+  | "wordmark"
+  | "wordmark-dark";
 
 // ─────────────────────────────────────────────────────────
-// THEME PALETTE — resolved colors per variant
+// THEME PALETTE
 // ─────────────────────────────────────────────────────────
 
 export interface ThemePalette {
   symbolColor:     string;
   nameColor:       string;
-  goldAccent:      string;
+  accentColor:     string;
   venturesColor:   string;
   descriptorColor: string;
-  /** Outer background — transparent when not applicable */
   bgColor:         string;
-  /** Whether to show a background panel */
   hasBg:           boolean;
 }
-
 
 export const getTheme = (variant : LogoVariant): ThemePalette => {
   const C = COLORS;
   const v = variant;
   // dark-mode variants
   if (v === "dark" || v === "dark-horizontal" || v === "wordmark-dark") {
-      return { symbolColor: C.cream, nameColor: C.cream, goldAccent: C.gold, venturesColor: C.gold, descriptorColor: C.blueLight, bgColor: C.darkNavy, hasBg: true };
-    }
+      return { symbolColor: C.lightBg, nameColor: C.lightBg, accentColor: C.accent, venturesColor: C.accent, descriptorColor: C.tertiary, bgColor: C.darkBg, hasBg: true };
+  }
   if (v === "app-square" || v === "app-circle" || v === "favicon") {
-      return { symbolColor: C.cream, nameColor: C.cream, goldAccent: C.gold, venturesColor: C.gold, descriptorColor: C.blueLight, bgColor: C.darkNavy, hasBg: false };
+      return { symbolColor: C.lightBg, nameColor: C.lightBg, accentColor: C.accent, venturesColor: C.accent, descriptorColor: C.tertiary, bgColor: C.darkBg, hasBg: false };
   }
   // monochrome variants
   const monoMap: Partial<Record<LogoVariant, string>> = {
-    "mono-navy":  C.navy,
+    "mono-primary":  C.primary,
     "mono-black": C.black,
-    "mono-gold":  C.gold,
+    "mono-accent":  C.accent,
   };
   if (v in monoMap) {
     const mc = monoMap[v]!;
     return {
-      symbolColor: mc, nameColor: mc, goldAccent: mc,
+      symbolColor: mc, nameColor: mc, accentColor: mc,
       venturesColor: mc, descriptorColor: mc,
       bgColor: "transparent", hasBg: false,
     };
   }
   if (v === "mono-white") {
     return {
-      symbolColor: C.white, nameColor: C.white, goldAccent: C.white,
+      symbolColor: C.white, nameColor: C.white, accentColor: C.white,
       venturesColor: C.white, descriptorColor: C.white,
       bgColor: C.black, hasBg: true,
     };
   }
 
-  // light (default) — primary, horizontal, compact, wordmark, icon-only, appicon-light, appicon-plain, favicon-light
+  // light (default)
   return {
-    symbolColor:     C.navy,
-    nameColor:       C.navy,
-    goldAccent:      C.gold,
-    venturesColor:   C.gold,
-    descriptorColor: C.blueMid,
+    symbolColor:     C.primary,
+    nameColor:       C.primary,
+    accentColor:     C.accent,
+    venturesColor:   C.accent,
+    descriptorColor: C.secondary,
     bgColor:         "transparent",
     hasBg:           false,
   };
-
 }
-
-// ─────────────────────────────────────────────────────────
-// SVG PATH — H + Handshake mark
-// Original viewBox: 0 0 852 833
-// ──────────────────────────────────── ────────────────────
-
 
 export const H_MARK_PATH =
   "m112.6 9.8c66.1 0.2 109.4 0.7 110.1 1.3 1 0.7 1.4 29.3 1.6 135.6 0.3 124.5 0.4 135.3 2 141.3 1 3.6 3.7 10.5 6.1 15.5 2.6 5.5 6.5 11.3 9.7 14.9 3 3.3 8.1 7.7 11.4 9.8 3.3 2.2 8.9 4.9 12.5 6 6.2 2.1 8.6 2.2 49.7 2.5 36.5 0.3 43.3 0.5 43 1.7-0.1 0.8-9.8 11.9-21.6 24.8-14.2 15.4-22.1 24.8-23.4 27.8-1.4 3.3-1.8 5.9-1.5 9.5 0.3 2.7 1.4 7 2.5 9.5 1 2.5 3.9 6.7 6.4 9.3 2.4 2.7 6.2 5.9 8.4 7.1 2.2 1.3 6.5 3.2 9.5 4.2 3.7 1.3 8.4 1.8 14.5 1.8 8.1 0 9.9-0.3 18-3.7 4.9-2.1 12.8-6.3 17.5-9.5 4.7-3.1 12.9-9.3 18.3-13.7 5.4-4.4 11.3-9 13-10.3 3-2.1 4-2.3 19.7-2.2 9.1 0.1 17.3 0.4 18.3 0.8 1 0.4 31.3 29.7 67.4 65.2 43.4 42.8 66 65.7 67 68 0.8 1.9 1.5 5.3 1.5 7.5 0 2.2-0.8 6-1.9 8.5-1.1 2.5-3.5 5.9-5.4 7.6-1.9 1.6-5.2 3.6-7.4 4.3-2.6 0.9-5.6 1.1-8.5 0.6-3.9-0.7-5.8-2-14-9.9-5.2-4.9-19.4-18.8-31.5-30.8-12.1-12-22.7-22.3-23.5-22.8-0.8-0.5-2.8-1-4.3-1-1.7 0-3.8 1-5.2 2.5-1.6 1.6-2.5 3.6-2.5 5.7 0 3 2.9 6.2 29.5 32.8 24.6 24.7 29.6 30.2 30.5 33.5 0.9 3.2 0.8 5.1-0.5 9-0.8 2.7-2.5 6-3.8 7.3-1.2 1.3-2.1 2.7-2 3 0.2 0.4-0.2 0.7-0.7 0.7-0.6 0-1.4 0.6-1.8 1.3-0.4 0.8-1 1.3-1.5 1.3-0.4-0.1-2.4 0.2-4.5 0.5-2 0.3-5.7 0-8.2-0.6-4-1.1-7.4-4.1-31-27.6-25.2-25-26.7-26.4-30.3-26.4-2.9 0-4.1 0.6-5.7 2.7-1.2 1.6-2.1 3.9-2.1 5.3 0 1.9 5.2 7.5 23.1 25 16.7 16.4 23.4 23.6 24.6 26.5 1.3 3.4 1.4 4.7 0.3 9-0.8 2.8-2.8 6.7-4.7 9-1.9 2.2-3.7 4-4.1 4.1-0.3 0-2.4 0.6-4.6 1.3-3.2 1-5 1-8.5 0.1-3.9-1-6.9-3.6-21.5-17.8-9.3-9.2-17.4-17.4-18.1-18.2-0.6-0.8-2.5-2.1-4.2-2.8-2.7-1-3.6-0.9-5.7 0.3-1.4 0.8-3 2.6-3.5 4-0.6 1.4-0.7 3.3-0.4 4.2 0.4 1 6.7 7.9 13.9 15.3 9.9 10 13.6 14.5 14.6 17.5 1 3.5 1 4.7-0.7 9-1 2.7-3.2 6.4-4.9 8-1.8 1.9-5 3.6-8 4.4-4.5 1.2-5.4 1.1-9.5-0.7-2.7-1.2-7.7-5.2-20.1-17.7l1-4c0.6-2.2 1.1-6 1.1-8.5 0-2.5-0.7-7-1.6-10-0.9-3-2.9-7.4-4.5-9.8-1.6-2.3-5-5.6-7.7-7.2-2.6-1.7-6.5-3.5-12.7-5.1l-1.2-8.7c-1-7.5-1.7-9.5-5-14.1-2.1-2.9-6.1-7-8.8-8.9-2.8-2-7-4.2-9.5-4.9-2.5-0.7-7.1-1.3-16-1.3l-0.5-4.3c-0.2-2.4-1.8-6.3-3.7-9.2-1.8-2.8-4.9-6.5-6.8-8.3-1.9-1.7-5.8-4.3-8.5-5.7-4-2-6.5-2.5-12.3-2.5-4.1 0-8.8 0.6-11 1.5-2 0.9-4.3 1.5-5 1.5-0.6 0-2-1.7-3-3.7-0.9-2-3.7-5.6-6.2-8-2.5-2.5-7.2-5.8-10.5-7.4-5-2.4-7.2-2.9-13-2.9-3.9 0.1-8.8 0.7-11 1.5-2.2 0.8-5.5 2.5-7.3 3.8-1.9 1.2-7.4 6.9-12.4 12.7-5 5.8-10.1 12.7-11.4 15.5-1.2 2.7-2.6 6.3-3 8-0.4 1.6-0.8 9.5-1.1 17.5-0.2 8-0.5 74.4-0.6 147.7-0.1 73.2 0.1 132.9 0.5 132.7 0.5-0.2 0.5 1.5 0.2 3.8-0.4 2.4-1.2 4.9-1.8 5.6-0.9 1-22.8 1.3-110.4 1.2-60 0-109.7-0.2-110.2-0.5-0.6-0.3-1-2.2-1-4.3-0.1-2 0.5-4.2 1.2-4.8 0.7-0.6 3.8-1.9 6.8-2.9 3-1 8-3.2 11-5 3-1.8 7.4-5.5 9.8-8.1 2.4-2.7 5.4-7.2 6.7-9.9 1.4-2.8 3.1-7.7 4-11 1.3-5.3 1.5-23.9 1.5-151.5 0-80 0-243.8-0.1-364-0.1-184.3-0.3-219.3-1.5-223.8-0.8-2.8-2.5-7.5-3.9-10.2-1.4-2.8-4.2-6.9-6.3-9.1-2-2.3-5.7-5.6-8.2-7.2-2.5-1.7-8.1-4.5-12.5-6.2-8-3.1-8-3.1-8.3-7.1-0.2-2.5 0.2-4.3 1.1-4.9 0.9-0.7 38.8-0.9 110.3-0.7zm738.9 0.7l0.3 4c0.2 2.5-0.2 4.4-1 5.1-0.7 0.6-3.6 1.9-6.3 2.8-2.8 0.8-7.7 3.2-11 5.1-3.3 1.9-8 5.7-10.4 8.3-2.4 2.6-5.5 6.9-6.8 9.7-1.4 2.7-3.1 7.9-3.9 11.5-1.1 5.3-1.3 70.9-1.3 368.5 0.1 317.3 0.3 362.8 1.6 368.5 0.8 3.6 2.7 9 4.3 12 1.5 3 5.4 8 8.6 11.1 3.3 3.1 7.9 6.6 10.4 7.9 2.5 1.3 7 3.1 15.5 5.6v9.9l-108.5 0.2c-59.7 0.1-109.5 0.3-110.7 0.5-1.4 0.2-2.6-0.4-3.3-1.7-0.7-1.4-1.1-43.1-1.5-283l-2.3-8c-1.2-4.4-4-11.8-6.3-16.5-2.2-4.7-5.9-11-8.2-14-2.3-3-17.7-18.8-34.2-35-16.5-16.2-42.6-41.8-58-57-15.4-15.1-33.4-32.8-52-50.9l-24.5-0.1c-20.5 0-25 0.3-27.5 1.6-1.7 0.9-6.3 4.4-10.3 7.8-4 3.3-10.3 8.5-14 11.4-3.7 2.9-10 7.3-14 9.7-3.9 2.5-10 5.4-13.5 6.6-4.4 1.5-7.8 2-11.7 1.7-3.5-0.3-7.5-1.6-10.9-3.4-2.9-1.6-6.2-4.1-7.2-5.7-1.1-1.5-1.9-3.8-1.9-5.2 0-1.9 6.4-9.5 25.2-30.2 13.9-15.2 26.9-29.4 28.8-31.5 3.1-3.3 6.1-4.8 25-11.9 11.8-4.4 26.9-10.1 33.5-12.6 6.6-2.5 14.5-5 17.5-5.5 4.2-0.8 7.3-0.7 13 0.5 4.1 0.8 19.2 6.1 33.5 11.7 14.3 5.6 29.6 11.3 34 12.6 4.4 1.4 10.7 2.9 14 3.4 3.3 0.6 8.6 1 11.7 1 3.2 0 9.1-0.7 13-1.5 4-0.8 10.9-3.3 15.3-5.4 6.2-3 9.6-5.5 14.7-11 4.6-4.8 7.9-9.5 10.2-14.4 1.9-3.9 4.3-9.9 5.2-13.2 1.7-5.6 1.9-14.3 2-142.4 0.1-108 0.4-136.7 1.4-137.8 1-1.1 20.8-1.3 222.5-0.8zm-581.5 499.6c0.3 0 2.3 0.4 4.5 1 2.2 0.6 5.1 2.1 6.4 3.2 1.3 1.2 3 3.7 3.7 5.4 0.8 1.8 1.4 4.6 1.4 6.3 0 1.6-0.6 4.5-1.3 6.2-0.8 1.8-4.6 6.9-8.6 11.3-4 4.4-8.5 8.8-9.9 9.7-1.5 1-4.4 1.8-6.5 1.8-2 0-5.4-0.8-7.4-1.8-2-0.9-4.7-3.1-6-4.7-1.3-1.7-2.6-4.8-3-7-0.4-3-0.1-5.1 1.6-8.5 1.2-2.5 5.6-8.2 9.9-12.8 5.7-6.2 8.6-8.6 11.2-9.2 1.9-0.4 3.7-0.8 4-0.9zm47.5 18.9c3.7 0 5.9 0.6 8.5 2.3 1.9 1.2 4.5 4.1 5.8 6.2 1.8 3.1 2.2 5 1.8 8.5-0.3 2.5-1.5 5.9-2.8 7.6-1.3 1.7-7.1 8.6-13.1 15.3-5.9 6.6-11.9 12.9-13.5 13.8-1.5 0.9-4.7 1.7-7.2 1.7-2.5 0-6-0.8-7.8-1.7-1.7-0.9-4.3-3.4-5.7-5.5-1.8-2.6-2.5-5-2.5-8.2 0-2.5 0.7-5.9 1.6-7.5 0.9-1.7 6.9-9.1 13.4-16.6 6.4-7.5 12.8-14.1 14.1-14.7 1.3-0.6 4.6-1.1 7.4-1.2zm39.2 30.1c2.4-0.1 5.6 0.6 7.3 1.4 1.6 0.8 3.9 2.7 5 4.2 1.2 1.6 2.5 4.1 3.1 5.8 0.7 2 0.7 4.4 0 7.2-0.9 3.4-3.8 7.3-13.9 18.5-7 7.7-13.3 14.3-14 14.5-0.6 0.1-1 0.7-0.7 1.3 0.3 0.5-0.1 0.7-0.8 0.4-0.6-0.3-2.7-0.1-4.5 0.5-2.1 0.7-3.2 0.7-3.2 0.1 0-0.6-1.4-1-3-1-1.8 0-3.8-0.9-5.1-2.3-1.2-1.2-3-3.6-4-5.2-1-1.7-1.9-4.7-1.9-6.8 0-2 0.6-5.2 1.4-7 0.7-1.7 3-4.8 4.9-6.7 2-1.9 3.7-3.8 3.7-4.3 0-0.4 4.2-4.9 9.2-10.1 5.1-5.2 10-9.6 10.8-9.9 0.8-0.3 3.4-0.6 5.7-0.6zm27.5 36.9c2.1 0 5 0.6 6.5 1.4 1.6 0.7 4 2.7 5.5 4.5 1.6 1.7 3.1 4.8 3.4 6.8 0.4 2.1 0.2 5.4-0.4 7.3-0.6 1.9-4.7 7.5-9 12.5-4.8 5.5-9.1 9.5-11.2 10.4-2.4 1-5.2 1.2-9 0.8-4.7-0.6-6-1.2-8.8-4.4-1.8-2.1-3.7-5.4-4.2-7.3-0.5-1.9-0.7-4.6-0.4-6 0.3-1.4 2.3-4.8 4.5-7.5 2.2-2.8 6.2-7.4 8.7-10.3 2.6-3 6-6 7.7-6.7 1.6-0.8 4.7-1.4 6.7-1.5z";

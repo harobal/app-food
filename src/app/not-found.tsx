@@ -1,133 +1,92 @@
 import React from "react";
-import { FoodsLink } from "@/components/pages/foods-link";
-import { ArrowRight, ChevronLeft, Flame, PackageCheck, ShieldAlert, Sparkles, Wheat, Truck, FileText } from "lucide-react";
-import { TradeLoopSpinner } from "@/brand/BrandLoaders";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
+import { ArrowRight, Leaf, Wheat } from "lucide-react";
+import { siteConfig } from "@/config/site";
+import { HMark } from "@/brand";
+import { COLORS } from "@/brand/brand";
 
 export const metadata = {
-  title: "Agro Commodity Lot Not Found (404) | Harobal Foods",
-  description: "The requested food commodity, spice grade, grain variety, or agricultural specification is not listed.",
+  title: "404 — Harvest Route Unavailable | Harobal Foods",
+  description: "The requested agriculture corridor could not be located.",
 };
 
-export default function FoodsNotFound() {
+export default function GlobalNotFound() {
   return (
-    <div className="section-space min-h-[75vh] flex flex-col items-center justify-center relative overflow-hidden">
-      {/* Background Harvest Amber Radial Lighting */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-100/50 dark:from-amber-950/20 via-background to-background pointer-events-none" />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-500/10 dark:bg-amber-400/5 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="container-shell relative z-10 max-w-2xl text-center space-y-8">
-        {/* Animated Trade Loop Spinner */}
-        <div className="flex flex-col items-center justify-center">
-          <div className="p-4 rounded-2xl bg-card border border-border shadow-md">
-            <TradeLoopSpinner size={68} theme="foods" speed={2.2} />
-          </div>
-
-          <div className="mt-5 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-600/25 bg-amber-500/10 text-amber-700 dark:text-amber-300 text-xs font-semibold uppercase tracking-[0.2em]">
-            <ShieldAlert className="size-3.5" /> 404 • Uncharted Harvest Lot
-          </div>
+    <div className="fixed inset-0 z-[100] flex flex-col lg:flex-row bg-background overflow-hidden selection:bg-accent/20">
+      
+      {/* LEFT PANEL - Dark Theme (Primary) */}
+      <div className="relative flex flex-col justify-between w-full lg:w-5/12 p-10 sm:p-16 border-b lg:border-b-0 lg:border-r border-accent/20 bg-primary text-primary-foreground">
+        
+        <div className="relative z-10">
+          <HMark size={48} color={COLORS.accent} />
         </div>
-
-        {/* Narrative & Heading */}
-        <div className="space-y-3">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight font-serif text-foreground">
-            This Agricultural Commodity Lot <br />
-            <span className="text-[#D97706] dark:text-amber-400">Is Currently Unavailable</span>
+        
+        <div className="relative z-10 space-y-6 mt-16 lg:mt-0">
+          <p className="font-sans text-xs font-semibold tracking-[0.25em] uppercase text-accent">
+            System Error Protocol
+          </p>
+          <h1 className="text-8xl sm:text-[160px] leading-[0.8] font-serif text-primary-foreground tracking-tighter -ml-2">
+            404
           </h1>
-          <p className="max-w-lg mx-auto text-sm sm:text-base text-muted-foreground leading-relaxed">
-            The spice grade, grain variety, pulse lot, or processed agro specification you requested is unlisted or seasonal harvest batches are being renewed.
+          <div className="h-[2px] w-16 bg-accent" />
+          <p className="font-serif text-2xl sm:text-3xl text-primary-foreground/80 leading-snug max-w-sm">
+            The requested harvest route is uncharted.
           </p>
         </div>
 
-        {/* Quick Sourcing Category Grid */}
-        <div className="grid gap-3 sm:grid-cols-2 text-left pt-1">
-          <FoodsLink href="/catalog" className="group block">
-            <Card className="h-full border-border/80 bg-card/60 hover:bg-card hover:border-[#D97706]/40 transition-all duration-200">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-md bg-[#D97706]/10 text-[#D97706]">
-                    <Wheat className="size-4" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">Commodities Catalogue</p>
-                    <p className="text-xs text-muted-foreground">Spices, grains, pulses &amp; oilseeds</p>
-                  </div>
-                </div>
-                <ArrowRight className="size-4 text-muted-foreground group-hover:text-[#D97706] group-hover:translate-x-1 transition-all" />
-              </CardContent>
-            </Card>
-          </FoodsLink>
-
-          <FoodsLink href="/rfq" className="group block">
-            <Card className="h-full border-border/80 bg-card/60 hover:bg-card hover:border-[#D97706]/40 transition-all duration-200">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-md bg-[#D97706]/10 text-[#D97706]">
-                    <FileText className="size-4" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">Custom Commodity RFQ</p>
-                    <p className="text-xs text-muted-foreground">Send target specifications &amp; quantities</p>
-                  </div>
-                </div>
-                <ArrowRight className="size-4 text-muted-foreground group-hover:text-[#D97706] group-hover:translate-x-1 transition-all" />
-              </CardContent>
-            </Card>
-          </FoodsLink>
-
-          <FoodsLink href="/quality" className="group block">
-            <Card className="h-full border-border/80 bg-card/60 hover:bg-card hover:border-[#D97706]/40 transition-all duration-200">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-md bg-[#D97706]/10 text-[#D97706]">
-                    <PackageCheck className="size-4" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">Quality &amp; Lab Standards</p>
-                    <p className="text-xs text-muted-foreground">Phytosanitary &amp; safety compliance</p>
-                  </div>
-                </div>
-                <ArrowRight className="size-4 text-muted-foreground group-hover:text-[#D97706] group-hover:translate-x-1 transition-all" />
-              </CardContent>
-            </Card>
-          </FoodsLink>
-
-          <FoodsLink href="/logistics" className="group block">
-            <Card className="h-full border-border/80 bg-card/60 hover:bg-card hover:border-[#D97706]/40 transition-all duration-200">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-md bg-[#D97706]/10 text-[#D97706]">
-                    <Truck className="size-4" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">Logistics &amp; Cold Chain</p>
-                    <p className="text-xs text-muted-foreground">Container shipping &amp; Incoterms</p>
-                  </div>
-                </div>
-                <ArrowRight className="size-4 text-muted-foreground group-hover:text-[#D97706] group-hover:translate-x-1 transition-all" />
-              </CardContent>
-            </Card>
-          </FoodsLink>
+        <div className="relative z-10 hidden lg:block">
+          <p className="text-[10px] text-primary-foreground/50 font-sans uppercase tracking-[0.3em]">
+            {siteConfig.appName ?? "Harobal Foods"} • Agriculture & Organic Commodities
+          </p>
         </div>
+      </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
-          <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium">
-            <FoodsLink href="/catalog">
-              Explore Full Food Catalogue <ArrowRight className="size-4 ml-1.5" />
-            </FoodsLink>
-          </Button>
-          <Button asChild variant="outline" size="lg">
-            <FoodsLink href="/rfq">
-              Submit Custom RFQ
-            </FoodsLink>
-          </Button>
-          <Button asChild variant="ghost" size="lg" className="text-muted-foreground">
-            <FoodsLink href="/">
-              <ChevronLeft className="size-4 mr-1" /> Foods Home
-            </FoodsLink>
-          </Button>
+      {/* RIGHT PANEL - Light Theme (Background) */}
+      <div className="relative flex flex-col justify-center w-full lg:w-7/12 p-8 sm:p-16 lg:p-24 bg-background">
+        
+        <div className="max-w-xl space-y-12">
+          
+          <div className="space-y-4">
+            <h2 className="text-3xl sm:text-4xl font-serif text-foreground">
+              Coordinates Lost
+            </h2>
+            <p className="text-base sm:text-lg text-muted-foreground font-sans leading-relaxed">
+              We cannot locate the specification, organic commodity, or supply chain corridor you are looking for. It may have been relocated, archived, or is currently inaccessible.
+            </p>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2">
+            
+            {/* Return Hub Card */}
+            <Link href="/" className="group block h-full">
+              <div className="h-full p-8 rounded-xl border border-border bg-card shadow-sm hover:shadow-md hover:border-accent/40 hover:-translate-y-1 transition-all duration-300">
+                <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center mb-6 group-hover:bg-accent/10 transition-colors">
+                  <Leaf className="size-6 text-primary group-hover:text-accent transition-colors" />
+                </div>
+                <h3 className="text-lg font-serif font-semibold text-card-foreground mb-2">Return to Hub</h3>
+                <p className="text-sm text-muted-foreground font-sans mb-6">Navigate back to the main organic dashboard.</p>
+                <div className="text-sm font-semibold text-primary inline-flex items-center group-hover:text-accent transition-colors">
+                  Go to Homepage <ArrowRight className="ml-2 size-4" />
+                </div>
+              </div>
+            </Link>
+
+            {/* Contact Desk Card */}
+            <Link href="/contact" className="group block h-full">
+              <div className="h-full p-8 rounded-xl border border-border bg-card shadow-sm hover:shadow-md hover:border-accent/40 hover:-translate-y-1 transition-all duration-300">
+                <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center mb-6 group-hover:bg-accent/10 transition-colors">
+                  <Wheat className="size-6 text-primary group-hover:text-accent transition-colors" />
+                </div>
+                <h3 className="text-lg font-serif font-semibold text-card-foreground mb-2">Contact Desk</h3>
+                <p className="text-sm text-muted-foreground font-sans mb-6">Require manual sourcing or harvest assistance?</p>
+                <div className="text-sm font-semibold text-primary inline-flex items-center group-hover:text-accent transition-colors">
+                  Reach out to us <ArrowRight className="ml-2 size-4" />
+                </div>
+              </div>
+            </Link>
+
+          </div>
+          
         </div>
       </div>
     </div>

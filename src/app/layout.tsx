@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { defaultMetadata } from "@/config/site";
 import "./globals.css";
 import { FoodsHeader } from "@/components/layout/foods-header";
 import { FoodsFooter } from "@/components/layout/foods-footer";
@@ -11,6 +12,7 @@ import { Geist } from "next/font/google";
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
+  ...defaultMetadata,
   title: {
     default: "Harobal Foods | Indian Agro & Food Commodity Exports",
     template: "%s | Harobal Foods",
