@@ -19,8 +19,8 @@ export const APP_ROUTES = {
 } as const;
 
 export const EXTERNAL_ROUTES = {
-  STONES_DIVISION: "https://stones.harobalventures.com",
-  FOODS_DIVISION: "https://foods.harobalventures.com",
+  STONES_DIVISION: "https://stones.harobal.com",
+  FOODS_DIVISION: "https://foods.harobal.com",
 } as const;
 
 export const APP_ROUTE_ITEMS: AppRouteItem[] = [

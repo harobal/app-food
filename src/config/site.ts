@@ -8,9 +8,10 @@ export const siteConfig = {
   description:
     "Harobal Foods connects global buyers with export-ready Indian food and agricultural suppliers through traceable, compliant execution.",
   locale: "en_IN",
-  primarySiteUrl: process.env.NEXT_PUBLIC_PRIMARY_SITE_URL ?? "https://harobalventures.com",
-  stonesSiteUrl: process.env.NEXT_PUBLIC_STONES_SITE_URL ?? "https://stones.harobalventures.com",
-  foodsSiteUrl: process.env.NEXT_PUBLIC_FOODS_SITE_URL ?? "https://foods.harobalventures.com",
+  primarySiteUrl: process.env.NEXT_PUBLIC_PRIMARY_SITE_URL || "https://harobal.com",
+  stonesSiteUrl: process.env.NEXT_PUBLIC_STONES_SITE_URL || "https://stones.harobal.com",
+  foodsSiteUrl: process.env.NEXT_PUBLIC_FOODS_SITE_URL || "https://foods.harobal.com",
+  contactEmail: "foods@harobal.com",
   themeColor: "#2E6B55",
 } as const;
 
@@ -51,4 +52,3 @@ export const defaultMetadata: Metadata = {
     description: siteConfig.description,
   },
 };
-

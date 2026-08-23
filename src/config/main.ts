@@ -7,7 +7,7 @@ import { siteConfig } from "./site";
 export const foodsSite = {
   id: "foods" as const,
   displayName: "Harobal Foods",
-  hostname: "foods.harobalventures.com",
+  hostname: "foods.harobal.com",
   url: siteConfig.foodsSiteUrl,
 } as const;
 
