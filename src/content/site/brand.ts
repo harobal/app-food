@@ -1,6 +1,6 @@
 export const brand = {
   name: "Harobal Foods",
-  legalName: "Harobal Ventures Global Trading LLP",
+  legalName: "Harobal Global Trading LLP",
   tagline: "Export-ready foods and agriculture",
   shortDescription:
     "Harobal Foods supports global buyers with export-ready food and agricultural sourcing, traceability, compliance, and shipment execution.",

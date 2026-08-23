@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const siteConfig = {
   appName: "Harobal Foods",
-  legalName: "Harobal Ventures Global Trading LLP",
+  legalName: "Harobal Global Trading LLP",
   defaultTitle: "Harobal Foods | Export-ready Foods & Agriculture",
   titleTemplate: "%s | Harobal Foods",
   description:
@@ -30,14 +30,30 @@ export const defaultMetadata: Metadata = {
     template: siteConfig.titleTemplate,
   },
   description: siteConfig.description,
+  keywords: [
+    "Harobal Foods",
+    "Indian food exporter",
+    "export-ready agriculture India",
+    "spices export India",
+    "grains and pulses exporter",
+    "fresh fruits vegetables export",
+    "B2B food procurement",
+    "certified food exports",
+    "agro commodities India",
+    "food supply chain compliance",
+  ],
+  alternates: {
+    canonical: siteConfig.foodsSiteUrl,
+  },
   applicationName: siteConfig.appName,
   icons: {
     icon: [
-      { url: "/favicon_io/favicon.ico" },
+      { url: "/favicon.ico" },
       { url: "/favicon_io/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon_io/favicon-32x32.png", sizes: "32x32", type: "image/png" },
     ],
     apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
       { url: "/favicon_io/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
     other: [
@@ -58,5 +74,22 @@ export const defaultMetadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.defaultTitle,
     description: siteConfig.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  other: {
+    "geo.region": "IN-GJ",
+    "geo.placename": "Ahmedabad, Gujarat, India",
+    "geo.position": "23.0225;72.5714",
+    "ICBM": "23.0225, 72.5714",
   },
 };

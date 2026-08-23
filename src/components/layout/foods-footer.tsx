@@ -30,7 +30,7 @@ export function FoodsFooter() {
             rel="noopener noreferrer"
             className="inline-flex items-center text-sm font-semibold text-white/85 hover:text-brand-gold"
           >
-            Visit Harobal Ventures (Main site)
+            Visit Harobal (Main site)
           </a>
         </div>
 
@@ -92,4 +92,3 @@ export function FoodsFooter() {
     </footer>
   );
 }
-
