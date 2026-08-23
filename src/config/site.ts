@@ -15,8 +15,16 @@ export const siteConfig = {
   themeColor: "#2E6B55",
 } as const;
 
+function safeMetadataBase(url: string): URL {
+  try {
+    return new URL(url);
+  } catch {
+    return new URL("https://foods.harobal.com");
+  }
+}
+
 export const defaultMetadata: Metadata = {
-  metadataBase: new URL(siteConfig.foodsSiteUrl),
+  metadataBase: safeMetadataBase(siteConfig.foodsSiteUrl),
   title: {
     default: siteConfig.defaultTitle,
     template: siteConfig.titleTemplate,
