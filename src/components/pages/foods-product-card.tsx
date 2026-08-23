@@ -1,12 +1,13 @@
 "use client";
 
 import { Check, Plus, Sparkles } from "lucide-react";
-import type { FoodsCatalogListItem, FoodsQuoteProductRef } from "@/types/types";
+import type { FoodsCatalogListItem } from "@/features/catalog/domain/types";
+import type { FoodsQuoteProductRef } from "@/features/quote-request";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { FoodsLink } from "@/components/pages/foods-link";
-import { useFoodsQuoteRequest } from "@/providers/quote-request-provider";
+import { useFoodsQuoteRequest } from "@/features/quote-request";
 
 function toQuoteRef(item: FoodsCatalogListItem): FoodsQuoteProductRef {
   return {

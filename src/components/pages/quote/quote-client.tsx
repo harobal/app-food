@@ -2,9 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { Copy, Mail, MessageCircle, Trash2 } from "lucide-react";
-import type { FoodsQuoteItem } from "@/types/types";
+import type { FoodsQuoteItem } from "@/features/quote-request";
 import { brand } from "@/content/site";
-import { useFoodsQuoteRequest } from "@/providers/quote-request-provider";
+import { useFoodsQuoteRequest } from "@/features/quote-request";
 import { FoodsLink } from "@/components/pages/foods-link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -65,7 +65,8 @@ export function FoodsQuoteClient() {
   }, [message]);
 
   const whatsappHref = useMemo(() => {
-    const number = (brand.whatsapp || "").replace("+", "");
+    const number = (brand.whatsapp || "").replace(/\D/g, "");
+    if (!number) return null;
     const qs = new URLSearchParams({ text: message });
     return `https://wa.me/${number}?${qs.toString()}`;
   }, [message]);
@@ -192,11 +193,13 @@ export function FoodsQuoteClient() {
                 </a>
               </Button>
 
-              <Button asChild className="bg-secondary text-secondary-foreground hover:bg-secondary/90 sm:col-span-2">
-                <a href={whatsappHref} target="_blank" rel="noreferrer">
-                  <MessageCircle className="mr-2 size-4" /> WhatsApp
-                </a>
-              </Button>
+              {whatsappHref ? (
+                <Button asChild className="bg-secondary text-secondary-foreground hover:bg-secondary/90 sm:col-span-2">
+                  <a href={whatsappHref} target="_blank" rel="noreferrer">
+                    <MessageCircle className="mr-2 size-4" /> WhatsApp
+                  </a>
+                </Button>
+              ) : null}
             </div>
 
             <p className="text-xs text-muted-foreground">

@@ -1,194 +1,143 @@
 import type { Metadata } from "next";
-import { ArrowRight, CheckCircle2, ClipboardCheck, ShieldCheck, Snowflake, Truck } from "lucide-react";
-import { getFoodsCatalogListItems } from "@/services/catalog";
-import { SectionHeading } from "@/components/layout/section-heading";
+import { ArrowRight, Check, ClipboardCheck, FileCheck2, PackageCheck, ShieldCheck, Snowflake, Sprout, Truck } from "lucide-react";
+import { foodsCategoriesNav } from "@/content/navigation";
 import { FoodsLink } from "@/components/pages/foods-link";
-import { FoodsProductCard } from "@/components/pages/foods-product-card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Agro Commodities & Food Products Exports from India",
-  description:
-    "Source certified Indian spices, cereals, pulses, oilseeds, and processed agro foods with batch testing, container consolidation, and export logistics.",
+  description: "Source certified Indian spices, cereals, pulses, oilseeds, and processed agro foods with batch testing, container consolidation, and export logistics.",
 };
 
-const HERO_CATEGORIES = [
-  "Spices & Herbs",
-  "Nuts & Dry Fruits",
-  "Oilseeds & Oils",
-  "Cereals & Grains",
-  "Pulses & Lentils",
-  "Dehydrated & Processed",
+const CAPABILITIES = [
+  { icon: ShieldCheck, label: "Compliance discipline" },
+  { icon: ClipboardCheck, label: "Batch-level QC options" },
+  { icon: Snowflake, label: "Cold-chain planning" },
+  { icon: FileCheck2, label: "Export documentation" },
+] as const;
+
+const PROCESS = [
+  ["01", "Shortlist", "Browse by category, form, origin, and available certifications."],
+  ["02", "Specify", "Share destination, incoterms, packaging, and required thresholds."],
+  ["03", "Validate", "Align grade, testing options, documentation, and commercial feasibility."],
+  ["04", "Deliver", "Plan consolidation, shelf-life, route risk, and shipment milestones."],
 ] as const;
 
 export default function FoodsHomePage() {
-  const all = getFoodsCatalogListItems();
-
-  const featured: typeof all = [];
-  const used = new Set<string>();
-
-  for (const cat of HERO_CATEGORIES) {
-    const pick = all.find((p) => p.category === cat);
-    if (pick && !used.has(pick.slug)) {
-      featured.push(pick);
-      used.add(pick.slug);
-    }
-  }
-
-  for (const p of all) {
-    if (featured.length >= 6) break;
-    if (used.has(p.slug)) continue;
-    featured.push(p);
-    used.add(p.slug);
-  }
-
   return (
     <>
-      <section className="relative isolate overflow-hidden border-b border-white/10 bg-botanical-gradient">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_8%,color-mix(in_srgb,var(--brand-gold)_22%,transparent),transparent_32%),radial-gradient(circle_at_12%_88%,color-mix(in_srgb,var(--brand-signal)_18%,transparent),transparent_38%)]" />
-        <div className="absolute inset-0 opacity-[0.055] [background-image:linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] [background-size:52px_52px]" />
-        <div className="container-shell relative pb-16 pt-20 sm:pb-20 sm:pt-24 lg:pb-24 lg:pt-28">
-          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
-            <div className="space-y-7 text-white">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/75">
-                Foods &amp; Agriculture Export Division
-              </p>
-              <h1 className="text-[2.25rem] font-extrabold leading-[1.06] tracking-[-0.045em] sm:text-[3.1rem] lg:text-[3.85rem]">
-                Export-ready Indian foods — <span className="text-brand-gold">built for compliance and delivery</span>
-              </h1>
-              <p className="max-w-2xl text-base text-white/88 sm:text-lg">
-                Shortlist from the catalogue, add items to your RFQ list, and send one consolidated request. We align grades,
-                packaging, documentation, and shipment planning for executable quotes.
-              </p>
-
-              <div className="flex flex-wrap gap-3">
-                <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
-                  <FoodsLink href="/catalog">
-                    Browse Catalogue <ArrowRight className="ml-1 size-4" />
-                  </FoodsLink>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  size="lg"
-                  className="border-white/55 bg-transparent text-white hover:bg-white/10"
-                >
-                  <FoodsLink href="/rfq">Send RFQ</FoodsLink>
-                </Button>
-              </div>
-
-              <div className="flex flex-wrap gap-2 text-xs text-white/90">
-                {["Traceability mindset", "Residue alignment", "Cold-chain options", "Batch QC", "Documentation ready"].map(
-                  (badge) => (
-                    <span key={badge} className="rounded-full border border-white/25 bg-white/10 px-3 py-1">
-                      {badge}
-                    </span>
-                  ),
-                )}
-              </div>
+      <section className="home-hero relative isolate min-h-[700px] overflow-hidden bg-brand-ink text-white lg:min-h-[760px]">
+        <div className="absolute inset-0 -z-20 bg-[url('/media/harvest-meridian/foods-export-hero.webp')] bg-cover bg-[center_58%]" />
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(7,27,22,.96)_0%,rgba(7,27,22,.82)_42%,rgba(7,27,22,.24)_75%,rgba(7,27,22,.08)_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-[#071b16] to-transparent" />
+        <div className="container-shell flex min-h-[700px] flex-col justify-between pb-8 pt-20 lg:min-h-[760px] lg:pb-10 lg:pt-28">
+          <div className="max-w-3xl">
+            <p className="mb-6 inline-flex items-center gap-2 border-l-2 border-brand-gold pl-3 text-xs font-semibold uppercase tracking-[0.23em] text-white/78">Foods &amp; Agriculture Export Division</p>
+            <h1 className="max-w-[13ch] text-[2.75rem] font-extrabold leading-[.99] tracking-[-0.055em] sm:text-[4rem] lg:text-[5.35rem]">Indian foods, prepared for <span className="text-brand-gold">global trade.</span></h1>
+            <p className="mt-7 max-w-2xl text-base leading-7 text-white/82 sm:text-lg">Shortlist from the catalogue and send one consolidated RFQ. We align grades, packaging, documentation, quality-control options, and shipment planning for executable quotes.</p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Button asChild size="lg" className="h-12 bg-accent px-6 text-accent-foreground hover:bg-[#d9a748]"><FoodsLink href="/catalog">Explore the catalogue <ArrowRight className="ml-1 size-4" /></FoodsLink></Button>
+              <Button asChild variant="outline" size="lg" className="h-12 border-white/45 bg-white/5 px-6 text-white hover:bg-white/12 hover:text-white"><FoodsLink href="/rfq">Build an RFQ</FoodsLink></Button>
             </div>
-
-            <aside className="space-y-4">
-              <article className="elevated-card overflow-hidden rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md">
-                <div
-                  className="h-65 w-full bg-cover bg-center sm:h-80"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(180deg, rgba(7,18,35,0.08) 0%, rgba(7,18,35,0.76) 100%), url(https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=2000&q=80)",
-                  }}
-                  aria-hidden
-                />
-                <div className="p-5">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">Catalogue-first, RFQ-led</p>
-                  <p className="mt-2 text-2xl font-semibold text-white">Fresh + shelf-stable supply programs</p>
-                  <p className="mt-2 text-sm text-white/85">
-                    Use the catalogue to shortlist items across spices, grains, nuts, pulses, dehydrated formats, and seasonal fresh.
-                  </p>
-                </div>
-              </article>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                {[{ icon: ShieldCheck, label: "Compliance discipline" }, { icon: Truck, label: "Shipment readiness" }, { icon: Snowflake, label: "Cold-chain handling" }, { icon: ClipboardCheck, label: "Documentation control" }].map(
-                  ({ icon: Icon, label }) => (
-                    <div key={label} className="rounded-xl border border-white/20 bg-white/10 p-4 text-white backdrop-blur-md">
-                      <div className="flex items-center gap-2">
-                        <Icon className="size-5 text-brand-gold" />
-                        <p className="text-sm font-semibold">{label}</p>
-                      </div>
-                      <p className="mt-2 text-xs text-white/78">Built for buyer clarity and predictable outcomes.</p>
-                    </div>
-                  ),
-                )}
+          </div>
+          <div className="mt-14 grid border-y border-white/18 sm:grid-cols-2 lg:grid-cols-4">
+            {CAPABILITIES.map(({ icon: Icon, label }) => (
+              <div key={label} className="flex items-center gap-3 border-white/18 px-4 py-4 first:pl-0 sm:[&:nth-child(even)]:border-l lg:border-l lg:first:border-l-0">
+                <Icon className="size-5 shrink-0 text-brand-gold" aria-hidden /><span className="text-sm font-semibold text-white/88">{label}</span>
               </div>
-            </aside>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="section-space">
-        <div className="container-shell">
-          <SectionHeading
-            eyebrow="Featured"
-            title="Start with high-demand, high-repeat categories"
-            subtitle="A curated entry set — expand in the catalogue by category, form, origin, and certifications."
-          />
-
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {featured.map((product) => (
-              <FoodsProductCard key={product.id} product={product} />
+      <section className="overflow-hidden bg-background py-16 sm:py-20 lg:py-24">
+        <div className="container-shell grid gap-10 lg:grid-cols-[.72fr_1.28fr] lg:gap-16">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <p className="section-kicker">Catalogue</p>
+            <h2 className="mt-4 text-4xl font-bold tracking-[-0.045em] sm:text-5xl">Source across the harvest.</h2>
+            <p className="mt-5 max-w-md leading-7 text-muted-foreground">Fresh and shelf-stable programs, organised for faster product discovery and buyer-ready specification.</p>
+            <FoodsLink href="/catalog" className="mt-7 inline-flex items-center gap-2 text-sm font-bold text-primary hover:text-brand-gold">View all products <ArrowRight className="size-4" /></FoodsLink>
+          </div>
+          <div className="divide-y divide-border border-y border-border">
+            {foodsCategoriesNav.map((item, index) => (
+              <FoodsLink key={item.category} href={`/catalog?category=${encodeURIComponent(item.category)}`} className="category-row group grid grid-cols-[3rem_1fr_auto] items-center gap-3 py-4 sm:grid-cols-[4rem_1fr_auto] sm:py-5">
+                <span className="font-mono text-xs text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
+                <span className="text-xl font-semibold tracking-[-0.025em] transition-transform duration-300 group-hover:translate-x-2 sm:text-2xl">{item.label}</span>
+                <span className="flex size-10 items-center justify-center rounded-full border border-border transition-all group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground"><ArrowRight className="size-4" /></span>
+              </FoodsLink>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="relative isolate min-h-[620px] overflow-hidden text-white">
+        <div className="absolute inset-0 -z-20 bg-[url('/media/harvest-meridian/origin-sourcing-panorama.webp')] bg-cover bg-center" />
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(10,34,27,.9)_0%,rgba(10,34,27,.64)_42%,rgba(10,34,27,.08)_76%)]" />
+        <div className="container-shell flex min-h-[620px] items-center py-20">
+          <div className="max-w-xl border-l border-white/30 pl-6 sm:pl-9">
+            <p className="text-xs font-semibold uppercase tracking-[.23em] text-brand-gold">Origins &amp; sourcing</p>
+            <h2 className="mt-5 text-4xl font-bold tracking-[-0.045em] sm:text-5xl">From origin intelligence to export-ready supply.</h2>
+            <p className="mt-6 text-base leading-7 text-white/82">Programs account for seasonality, origin, grading, processing, packaging, and destination-market expectations—before shipment planning begins.</p>
+            <div className="mt-8 flex flex-wrap gap-x-7 gap-y-3 text-sm font-semibold text-white/88">
+              {["Origin-aligned selection", "Seasonality planning", "Buyer-defined grades"].map((item) => <span key={item} className="inline-flex items-center gap-2"><Check className="size-4 text-brand-gold" />{item}</span>)}
+            </div>
           </div>
         </div>
       </section>
 
       <section className="section-space bg-brand-surface">
         <div className="container-shell">
-          <SectionHeading
-            eyebrow="How It Works"
-            title="A sourcing flow designed for export execution"
-            subtitle="We align specs, documentation, and shipment planning — so procurement stays controlled."
-          />
-
-          <div className="grid gap-4 lg:grid-cols-4">
-            {[
-              {
-                title: "Shortlist",
-                detail: "Browse the catalogue and shortlist items by category, form, and origin.",
-              },
-              {
-                title: "Specify",
-                detail: "Share destination market, incoterms, packaging, and compliance requirements.",
-              },
-              {
-                title: "Validate",
-                detail: "We align grade, batch QC options, and documentation readiness for the destination.",
-              },
-              {
-                title: "Deliver",
-                detail: "Shipment planning aligned to shelf-life and route risk, with clear milestones.",
-              },
-            ].map((step) => (
-              <Card key={step.title} className="elevated-card overflow-hidden">
-                <div className="h-1.5 w-full bg-primary/15" aria-hidden />
-                <CardContent className="p-5">
-                  <p className="text-lg font-semibold">{step.title}</p>
-                  <p className="mt-2 text-sm text-muted-foreground">{step.detail}</p>
-                  <div className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-primary">
-                    <CheckCircle2 className="size-4" /> Execution-led
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="overflow-hidden rounded-[2rem] bg-brand-ink text-white shadow-2xl lg:grid lg:grid-cols-[1.08fr_.92fr]">
+            <div className="relative min-h-[390px] lg:min-h-[590px]">
+              <div className="absolute inset-0 bg-[url('/media/harvest-meridian/quality-control-lab.webp')] bg-cover bg-[center_60%]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-ink/55 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-brand-ink/30" />
+              <div className="absolute bottom-5 left-5 rounded-full border border-white/25 bg-brand-ink/70 px-4 py-2 text-xs font-semibold backdrop-blur-md">Buyer-aligned quality parameters</div>
+            </div>
+            <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-14">
+              <p className="text-xs font-semibold uppercase tracking-[.23em] text-brand-gold">Quality discipline</p>
+              <h2 className="mt-5 text-4xl font-bold tracking-[-0.045em] sm:text-5xl">Evidence before assurance.</h2>
+              <p className="mt-6 leading-7 text-white/76">Quality scope is aligned to product, buyer specification, and destination requirements. Available controls can include batch parameters, safety testing, traceability, and documentation review.</p>
+              <div className="mt-8 space-y-4">
+                {[[PackageCheck, "Grade and specification alignment"], [ShieldCheck, "Batch-level QC and safety-test options"], [FileCheck2, "Documentation-readiness review"]].map(([Icon, label]) => (
+                  <div key={label as string} className="flex items-center gap-4 border-t border-white/12 pt-4"><Icon className="size-5 text-brand-gold" /><span className="text-sm font-semibold text-white/88">{label as string}</span></div>
+                ))}
+              </div>
+              <FoodsLink href="/quality" className="mt-9 inline-flex items-center gap-2 text-sm font-bold text-brand-gold hover:text-white">Review our quality approach <ArrowRight className="size-4" /></FoodsLink>
+            </div>
           </div>
+        </div>
+      </section>
 
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-              <FoodsLink href="/catalog">Explore Full Catalogue</FoodsLink>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <FoodsLink href="/rfq">Build an RFQ</FoodsLink>
-            </Button>
+      <section className="section-space bg-background">
+        <div className="container-shell">
+          <div className="max-w-2xl"><p className="section-kicker">How it works</p><h2 className="mt-4 text-4xl font-bold tracking-[-0.045em] sm:text-5xl">One controlled path from interest to shipment.</h2></div>
+          <ol className="mt-12 grid border-t border-border md:grid-cols-2 lg:grid-cols-4">
+            {PROCESS.map(([number, title, detail]) => (
+              <li key={number} className="relative border-b border-border py-7 md:px-6 md:first:pl-0 lg:border-r lg:last:border-r-0"><span className="font-mono text-xs font-bold text-brand-gold">{number}</span><h3 className="mt-8 text-2xl font-semibold tracking-[-0.03em]">{title}</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">{detail}</p></li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="relative isolate overflow-hidden bg-brand-ink text-white">
+        <div className="absolute inset-0 -z-20 bg-[url('/media/harvest-meridian/cold-chain-logistics.webp')] bg-cover bg-center" />
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,22,18,.96)_0%,rgba(5,22,18,.86)_44%,rgba(5,22,18,.18)_80%)]" />
+        <div className="container-shell flex min-h-[560px] items-center py-20">
+          <div className="max-w-xl">
+            <div className="flex items-center gap-3 text-brand-gold"><Truck className="size-5" /><span className="text-xs font-semibold uppercase tracking-[.23em]">Logistics confidence</span></div>
+            <h2 className="mt-5 text-4xl font-bold tracking-[-0.045em] sm:text-5xl">Shipment planning that respects the product.</h2>
+            <p className="mt-6 leading-7 text-white/80">Container strategy, consolidation, storage conditions, cold-chain options, documentation, and route risk are aligned to the selected product program.</p>
+            <div className="mt-8 flex flex-wrap gap-3"><Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-[#d9a748]"><FoodsLink href="/logistics">Explore logistics</FoodsLink></Button><Button asChild size="lg" variant="outline" className="border-white/40 bg-white/5 text-white hover:bg-white/12 hover:text-white"><FoodsLink href="/services">View services</FoodsLink></Button></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="overflow-hidden bg-[#d9a747] text-brand-ink">
+        <div className="container-shell relative py-14 sm:py-16">
+          <Sprout className="absolute -right-4 -top-10 size-56 rotate-12 text-brand-ink/7" aria-hidden />
+          <div className="relative flex flex-col gap-7 lg:flex-row lg:items-center lg:justify-between">
+            <div><p className="text-xs font-bold uppercase tracking-[.22em]">Ready to source?</p><h2 className="mt-3 max-w-3xl text-3xl font-bold tracking-[-0.04em] sm:text-4xl">Build one RFQ across products, grades, and origins.</h2></div>
+            <Button asChild size="lg" className="h-12 shrink-0 bg-brand-ink px-7 text-white hover:bg-[#21483d]"><FoodsLink href="/rfq">Start your RFQ <ArrowRight className="ml-1 size-4" /></FoodsLink></Button>
           </div>
         </div>
       </section>

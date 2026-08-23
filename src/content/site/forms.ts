@@ -18,6 +18,17 @@ export const countryOptions = [
   "Other",
 ] as const;
 
-export const categoryOptions = ["Stone", "Food", "Electrical", "Industrial", "Crafts", "Other"] as const;
+export const categoryOptions = [
+  "Cereals & Grains",
+  "Dehydrated & Processed",
+  "Fresh Fruits",
+  "Fresh Vegetables",
+  "Nuts & Dry Fruits",
+  "Oilseeds & Oils",
+  "Pulses & Lentils",
+  "Spices & Herbs",
+  "Sweeteners",
+  "Mixed / Other",
+] as const;
 
 export const incotermOptions = ["FOB", "CIF", "CFR", "EXW"] as const;

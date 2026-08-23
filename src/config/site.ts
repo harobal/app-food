@@ -15,7 +15,7 @@ export const siteConfig = {
 } as const;
 
 export const defaultMetadata: Metadata = {
-  metadataBase: new URL(siteConfig.primarySiteUrl),
+  metadataBase: new URL(siteConfig.foodsSiteUrl),
   title: {
     default: siteConfig.defaultTitle,
     template: siteConfig.titleTemplate,
@@ -40,7 +40,7 @@ export const defaultMetadata: Metadata = {
   openGraph: {
     type: "website",
     locale: siteConfig.locale,
-    url: siteConfig.primarySiteUrl,
+    url: siteConfig.foodsSiteUrl,
     siteName: siteConfig.appName,
     title: siteConfig.defaultTitle,
     description: siteConfig.description,

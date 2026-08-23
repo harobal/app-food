@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageBreadcrumbs } from "@/components/layout/page-breadcrumbs";
-import { InquiryForm } from "@/components/features/inquiry-form";
+import { InquiryForm } from "@/features/inquiry";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {

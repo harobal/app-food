@@ -3,10 +3,9 @@ import { defaultMetadata } from "@/config/site";
 import "./globals.css";
 import { FoodsHeader } from "@/components/layout/foods-header";
 import { FoodsFooter } from "@/components/layout/foods-footer";
-import { FoodsQuoteRequestProvider } from "@/providers/quote-request-provider";
+import { FoodsQuoteRequestProvider } from "@/features/quote-request";
 import { FloatingWhatsApp } from "@/components/layout/floating-whatsapp";
 import { BackToTop } from "@/components/layout/back-to-top";
-import { CookieBanner } from "@/components/layout/cookie-banner";
 import { Geist } from "next/font/google";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
@@ -35,7 +34,6 @@ export default function FoodsLayout({
           <FoodsFooter />
           <FloatingWhatsApp />
           <BackToTop />
-          <CookieBanner />
         </FoodsQuoteRequestProvider>
       </body>
     </html>

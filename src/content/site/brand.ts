@@ -6,8 +6,8 @@ export const brand = {
     "Harobal Foods supports global buyers with export-ready food and agricultural sourcing, traceability, compliance, and shipment execution.",
   email: "info@harobalventures.com",
   salesEmail: "sales@harobalventures.com",
-  phone: "+91 90000 00000",
-  whatsapp: "+919000000000",
+  phone: process.env.NEXT_PUBLIC_CONTACT_PHONE ?? "",
+  whatsapp: process.env.NEXT_PUBLIC_CONTACT_WHATSAPP ?? "",
   address: "Jaipur, Rajasthan, India",
   businessHours: "Mon-Sat, 9:00 AM - 7:00 PM IST",
 };

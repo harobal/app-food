@@ -84,27 +84,22 @@ export const BrandLoadingScreen: React.FC<BrandLoadingScreenProps> = ({
     <div
       className={cn(
         "fixed inset-0 z-50 flex flex-col items-center justify-center p-6 text-center transition-all duration-500",
-        dark ? "bg-brand-ink/95 text-white" : "bg-brand-canvas/95 text-brand-ink",
-        "backdrop-blur-xl",
-        className
+        "bg-background/92 text-foreground backdrop-blur-xl supports-[backdrop-filter]:bg-background/84",
+        className,
       )}
       role="alert"
       aria-busy="true"
     >
-      <div className="relative z-10 flex flex-col items-center max-w-md w-full gap-8">
-        <div className="p-4">
-            <HarobalMinimalLoader size="xl" dark={dark} />
+      <div className="relative z-10 flex flex-col items-center max-w-md w-full gap-7 animate-in fade-in zoom-in-95 duration-300">
+        <div className="p-2">
+          <HarobalMinimalLoader size="xl" dark={dark} />
         </div>
 
-        <div className="space-y-3">
-          <h2
-            className="text-2xl font-semibold tracking-tight font-serif sm:text-3xl animate-pulse"
-          >
+        <div className="space-y-2">
+          <h2 className="text-2xl font-semibold tracking-tight font-serif sm:text-3xl text-foreground">
             {title}
           </h2>
-          <p
-            className="text-sm uppercase tracking-[0.3em] opacity-70 font-sans"
-          >
+          <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground font-sans">
             {subtitle}
           </p>
         </div>
