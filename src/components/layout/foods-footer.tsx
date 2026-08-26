@@ -74,7 +74,7 @@ export function FoodsFooter() {
             {whatsappHref ? (
               <li><a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="hover:text-secondary">WhatsApp RFQ Desk</a></li>
             ) : null}
-            <li className="text-xs text-white/70">{brand.businessHours}</li>
+            <li className="text-xs text-white/70">Global Food Commodity Export Desk</li>
           </ul>
 
           <div className="rounded-md border border-white/20 bg-white/10 px-3 py-2 text-xs text-white/75">

@@ -14,7 +14,7 @@ const valid = {
   quantity: "2 MT",
   incoterm: "CIF",
   message: "Please quote export-grade turmeric powder for Jebel Ali.",
-  source: "Referral",
+  source: "Partner / Trade Desk Referral",
   website: "",
   startedAt,
 };

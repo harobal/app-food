@@ -1,25 +1,95 @@
 "use client";
 
 import { useRef, useState, type FormEvent, type ReactNode } from "react";
-import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, LoaderCircle, Mail, MessageCircle } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  Copy,
+  LoaderCircle,
+  Mail,
+  MessageCircle,
+  Scale,
+  Send,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { brand, countryOptions, incotermOptions, inquirySourceOptions } from "@/content/site";
-import { buildWhatsAppHref } from "@/lib/contact-links";
+import {
+  allCountries,
+  brand,
+  categoryOptions,
+  incotermOptions,
+  inquirySourceOptions,
+  packagingOptions,
+  popularTradeCountries,
+  timelineOptions,
+  INCOTERMS_2020,
+} from "@/content/site";
+import { TradeResourceModal } from "@/components/trade/trade-resource-modal";
+import { generateClientToken } from "./security";
 import { validateInquiry, validateInquiryStepOne } from "./validation";
-import { inquiryCategories as categoryOptions, type InquiryApiResponse, type InquiryFieldErrors, type InquiryFormValues } from "./types";
+import type { InquiryApiResponse, InquiryFieldErrors, InquiryFormValues } from "./types";
 
 const initialState = (): InquiryFormValues => ({
-  fullName: "", companyName: "", email: "", phone: "", country: "", category: "", product: "", quantity: "", incoterm: "", message: "", source: "", website: "", startedAt: 0,
+  fullName: "",
+  companyName: "",
+  email: "",
+  phone: "",
+  country: "",
+  category: "",
+  otherCategory: "",
+  product: "",
+  quantity: "",
+  destinationPort: "",
+  incoterm: "",
+  otherIncoterm: "",
+  packaging: "",
+  timeline: "",
+  source: "",
+  otherSource: "",
+  message: "",
+  consent: false,
+  website: "",
+  startedAt: Date.now(),
 });
 
-const controlClass = "w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground shadow-xs transition-[border-color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/25 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/15";
-
-function Field({ id, label, error, required, children, className = "" }: { id: keyof InquiryFormValues; label: string; error?: string; required?: boolean; children: ReactNode; className?: string }) {
+function FormField({
+  id,
+  label,
+  error,
+  required,
+  children,
+  hint,
+  className = "",
+}: {
+  id: string;
+  label: string;
+  error?: string;
+  required?: boolean;
+  children: ReactNode;
+  hint?: string;
+  className?: string;
+}) {
   return (
     <div className={`space-y-1.5 ${className}`}>
-      <label htmlFor={id} className="text-sm font-semibold text-foreground">{label}{required ? <span className="ml-1 text-destructive" aria-hidden>*</span> : null}</label>
+      <div className="flex items-center justify-between gap-2">
+        <label htmlFor={id} className="text-xs font-semibold text-foreground">
+          {label}
+          {required ? (
+            <span className="ml-1 text-destructive" aria-hidden>
+              *
+            </span>
+          ) : null}
+        </label>
+        {hint && <span className="text-[11px] text-muted-foreground">{hint}</span>}
+      </div>
       {children}
-      {error ? <p id={`${id}-error`} role="alert" className="flex items-start gap-1.5 text-xs leading-5 text-destructive"><AlertCircle className="mt-0.5 size-3.5 shrink-0" aria-hidden />{error}</p> : null}
+      {error ? (
+        <p id={`${id}-error`} role="alert" className="flex items-start gap-1.5 text-xs text-destructive">
+          <AlertCircle className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -31,145 +101,554 @@ export function InquiryForm({ compact = false }: { compact?: boolean }) {
   const [status, setStatus] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [statusMessage, setStatusMessage] = useState("");
   const [referenceId, setReferenceId] = useState("");
-  const formRef = useRef<HTMLFormElement>(null);
-  const whatsappHref = buildWhatsAppHref(brand.whatsapp);
+  const [tradeModalOpen, setTradeModalOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  const update = <K extends keyof InquiryFormValues>(key: K, value: InquiryFormValues[K]) => {
-    setForm((current) => ({
-      ...current,
-      [key]: value,
-      startedAt: current.startedAt || Date.now(),
-    }));
-    setErrors((current) => ({ ...current, [key]: undefined }));
-    if (status === "error") setStatus("idle");
+  const formTopRef = useRef<HTMLDivElement>(null);
+
+  const updateField = (field: keyof InquiryFormValues, value: unknown) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }
   };
 
-  const focusFirstError = (nextErrors: InquiryFieldErrors) => {
-    requestAnimationFrame(() => {
-      const key = Object.keys(nextErrors)[0];
-      if (key) formRef.current?.querySelector<HTMLElement>(`#${key}`)?.focus();
-    });
-  };
-
-  const continueToBrief = () => {
-    const nextErrors = validateInquiryStepOne(form);
-    if (Object.keys(nextErrors).length) {
-      setErrors(nextErrors);
-      focusFirstError(nextErrors);
+  const handleNextStep = () => {
+    const stepOneErrors = validateInquiryStepOne(form);
+    if (Object.keys(stepOneErrors).length > 0) {
+      setErrors(stepOneErrors);
+      setStatus("error");
+      setStatusMessage("Please complete all required contact details.");
       return;
     }
     setErrors({});
+    setStatus("idle");
+    setStatusMessage("");
     setStep(2);
-    requestAnimationFrame(() => formRef.current?.querySelector<HTMLElement>("#category")?.focus());
+    formTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handlePrevStep = () => {
+    setStep(1);
+    setStatus("idle");
+    setStatusMessage("");
+    formTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (status === "pending") return;
+
     const validation = validateInquiry(form);
     if (!validation.ok) {
       setErrors(validation.errors);
       const stepOneErrors = validateInquiryStepOne(form);
-      if (Object.keys(stepOneErrors).length) setStep(1);
+      if (Object.keys(stepOneErrors).length > 0) setStep(1);
       setStatus("error");
-      setStatusMessage("Review the highlighted fields before sending.");
-      focusFirstError(validation.errors);
+      setStatusMessage("Please review the highlighted fields before sending.");
       return;
     }
 
     setStatus("pending");
-    setStatusMessage("Sending your requirement securely…");
+    setStatusMessage("Submitting your requirement securely to the Harobal Foods trade desk…");
     setErrors({});
+
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 12_000);
 
     try {
-      const response = await fetch("/api/inquiries", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(form), signal: controller.signal });
+      const response = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-inquiry-token": generateClientToken(form.startedAt),
+        },
+        body: JSON.stringify(form),
+        signal: controller.signal,
+      });
+
       const payload = (await response.json()) as InquiryApiResponse;
       if (!response.ok || !payload.ok) {
         setErrors(payload.errors ?? {});
-        if (payload.errors && ["fullName", "companyName", "email", "phone", "country"].some((key) => key in payload.errors!)) setStep(1);
+        if (
+          payload.errors &&
+          ["fullName", "companyName", "email", "phone", "country"].some((key) => key in payload.errors!)
+        ) {
+          setStep(1);
+        }
         setStatus("error");
-        setStatusMessage(payload.message || "The inquiry could not be delivered.");
-        focusFirstError(payload.errors ?? {});
+        setStatusMessage(payload.message || "Could not submit inquiry. Please try again.");
         return;
       }
+
       setStatus("success");
+      setReferenceId(payload.referenceId || "HRB-FOD-CONFIRMED");
       setStatusMessage(payload.message);
-      setReferenceId(payload.referenceId ?? "");
-      setForm(initialState());
-      setStep(1);
-    } catch (error) {
+      formTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch {
       setStatus("error");
-      setStatusMessage(error instanceof DOMException && error.name === "AbortError" ? "The request timed out. Please retry or use a direct contact option." : "The inquiry could not be delivered. Please retry or use a direct contact option.");
+      setStatusMessage("Connection timed out. Please try again or reach our export desk directly.");
     } finally {
       window.clearTimeout(timeout);
     }
   };
 
-  const textInput = (id: keyof InquiryFormValues, type = "text", placeholder = "") => (
-    <input id={id} name={id} type={type} value={String(form[id])} onChange={(event) => update(id, event.target.value as never)} placeholder={placeholder} className={controlClass} aria-invalid={Boolean(errors[id])} aria-describedby={errors[id] ? `${id}-error` : undefined} disabled={status === "pending"} />
+  const copyRefId = () => {
+    if (!referenceId) return;
+    navigator.clipboard.writeText(referenceId);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 3000);
+  };
+
+  const activeIncotermDefinition = INCOTERMS_2020.find(
+    (t) => t.code === (form.incoterm === "Other" ? form.otherIncoterm : form.incoterm),
   );
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="space-y-6" noValidate>
-      <input type="text" name="website" id="website" value={form.website} onChange={(event) => update("website", event.target.value)} tabIndex={-1} autoComplete="off" className="absolute -left-[9999px] size-px opacity-0" aria-hidden />
-
-      {!compact ? (
-        <div className="space-y-3" aria-label={`Inquiry step ${step} of 2`}>
-          <div className="grid grid-cols-2 gap-2" aria-hidden>{[1, 2].map((number) => <span key={number} className={`h-1.5 rounded-full transition-colors ${number <= step ? "bg-brand-signal" : "bg-muted"}`} />)}</div>
-          <div className="flex items-center justify-between gap-4 text-xs font-bold uppercase tracking-[0.14em]"><span className="text-brand-primary dark:text-brand-signal">{step === 1 ? "Contact essentials" : "Requirement brief"}</span><span className="text-muted-foreground">{step} / 2</span></div>
+    <div ref={formTopRef} className="relative rounded-2xl border border-border bg-card p-6 shadow-xl sm:p-8">
+      {/* Top Progress Bar */}
+      {!compact && (
+        <div className="mb-6 border-b border-border pb-5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <span className="flex size-6 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                {step}
+              </span>
+              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                {step === 1 ? "Step 1: Buyer Profile" : "Step 2: Commodity Specs & Incoterms"}
+              </span>
+            </div>
+            <span className="text-xs font-semibold text-muted-foreground">
+              {step === 1 ? "Next: Specifications & Delivery Terms" : "Final Step"}
+            </span>
+          </div>
+          <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-muted/40">
+            <div
+              className="h-full bg-gradient-to-r from-primary via-emerald-500 to-green-600 transition-all duration-300"
+              style={{ width: step === 1 ? "50%" : "100%" }}
+            />
+          </div>
         </div>
-      ) : null}
+      )}
 
-      {(compact || step === 1) ? (
-        <fieldset className="grid gap-4 sm:grid-cols-2">
-          <legend className="sr-only">Contact essentials</legend>
-          <Field id="fullName" label="Full name" error={errors.fullName} required>{textInput("fullName", "text", "Your full name")}</Field>
-          <Field id="companyName" label="Company name" error={errors.companyName} required>{textInput("companyName", "text", "Your company")}</Field>
-          <Field id="email" label="Business email" error={errors.email} required>{textInput("email", "email", "name@company.com")}</Field>
-          <Field id="phone" label="Phone / WhatsApp" error={errors.phone} required>{textInput("phone", "tel", "+91 …")}</Field>
-          <Field id="country" label="Country" error={errors.country} required className="sm:col-span-2">
-            <select id="country" name="country" value={form.country} onChange={(event) => update("country", event.target.value)} className={controlClass} aria-invalid={Boolean(errors.country)} aria-describedby={errors.country ? "country-error" : undefined} disabled={status === "pending"}><option value="">Select country</option>{countryOptions.map((country) => <option key={country} value={country}>{country}</option>)}</select>
-          </Field>
-        </fieldset>
-      ) : null}
+      {status === "success" ? (
+        <div className="space-y-6 py-4 text-center">
+          <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-500 ring-8 ring-emerald-500/5">
+            <CheckCircle2 className="size-8" />
+          </div>
 
-      {(compact || step === 2) ? (
-        <fieldset className="grid gap-4 sm:grid-cols-2">
-          <legend className="sr-only">Requirement brief</legend>
-          <Field id="category" label="Product category" error={errors.category} required>
-            <select id="category" name="category" value={form.category} onChange={(event) => update("category", event.target.value as InquiryFormValues["category"])} className={controlClass} aria-invalid={Boolean(errors.category)} aria-describedby={errors.category ? "category-error" : undefined} disabled={status === "pending"}><option value="">Select category</option>{categoryOptions.map((category) => <option key={category} value={category}>{category}</option>)}</select>
-          </Field>
-          <Field id="product" label="Specific product" error={errors.product}>{textInput("product", "text", "Example: turmeric powder, export grade")}</Field>
-          <Field id="quantity" label="Approximate quantity" error={errors.quantity}>{textInput("quantity", "text", "Example: one container")}</Field>
-          <Field id="incoterm" label="Preferred Incoterm" error={errors.incoterm}>
-            <select id="incoterm" name="incoterm" value={form.incoterm} onChange={(event) => update("incoterm", event.target.value as InquiryFormValues["incoterm"])} className={controlClass} disabled={status === "pending"}><option value="">Not decided</option>{incotermOptions.map((term) => <option key={term} value={term}>{term}</option>)}</select>
-          </Field>
-          <Field id="source" label="How did you find us?" error={errors.source} className="sm:col-span-2">
-            <select id="source" name="source" value={form.source} onChange={(event) => update("source", event.target.value as InquiryFormValues["source"])} className={controlClass} disabled={status === "pending"}><option value="">Select source</option>{inquirySourceOptions.map((source) => <option key={source} value={source}>{source}</option>)}</select>
-          </Field>
-          <Field id="message" label="Requirement details" error={errors.message} required className="sm:col-span-2">
-            <textarea id="message" name="message" value={form.message} onChange={(event) => update("message", event.target.value)} placeholder="Share specifications, quantity, destination, timeline, packaging, and compliance needs." className={`${controlClass} min-h-36 resize-y`} aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? "message-error" : "message-hint"} disabled={status === "pending"} />
-            {!errors.message ? <p id="message-hint" className="text-xs text-muted-foreground">Minimum 20 characters. Do not include confidential payment information.</p> : null}
-          </Field>
-        </fieldset>
-      ) : null}
+          <div className="space-y-2">
+            <span className="inline-block rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+              Inquiry Registered
+            </span>
+            <h3 className="text-xl font-bold tracking-tight text-foreground">
+              Thank you, {form.fullName}
+            </h3>
+            <p className="mx-auto max-w-lg text-sm text-muted-foreground leading-relaxed">
+              Your commodity requirement brief for <strong>{form.companyName || "your entity"}</strong> has been registered with our trade desk. An acknowledgement receipt has been dispatched to <strong>{form.email}</strong>.
+            </p>
+          </div>
 
-      <div className="flex flex-col-reverse gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
-        <p className="max-w-md text-xs leading-5 text-muted-foreground">Submission is server-validated. Delivery is confirmed only after the configured trade-desk transport accepts it.</p>
-        <div className="flex items-center justify-end gap-2">
-          {!compact && step === 2 ? <Button type="button" variant="outline" size="lg" onClick={() => setStep(1)} disabled={status === "pending"}><ArrowLeft className="size-4" aria-hidden />Back</Button> : null}
-          {!compact && step === 1 ? <Button type="button" size="lg" onClick={continueToBrief}>Continue<ArrowRight className="size-4" aria-hidden /></Button> : <Button type="submit" size="lg" disabled={status === "pending"}>{status === "pending" ? <LoaderCircle className="size-4 animate-spin" aria-hidden /> : null}{status === "pending" ? "Sending…" : "Send inquiry"}</Button>}
+          {/* Reference Card */}
+          <div className="mx-auto max-w-md rounded-xl border border-primary/20 bg-primary/5 p-4 text-left">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
+              Your Tracking Reference ID
+            </span>
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-lg font-extrabold text-foreground">{referenceId}</span>
+              <button
+                type="button"
+                onClick={copyRefId}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 py-1 text-xs font-semibold text-foreground hover:bg-accent"
+              >
+                <Copy className="size-3.5" />
+                {copied ? "Copied!" : "Copy"}
+              </button>
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Our export specialists will verify batch availability, test certificates, and follow up within <strong>24 to 48 business hours</strong>.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-3 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setForm(initialState());
+                setStep(1);
+                setStatus("idle");
+              }}
+            >
+              Submit Another Inquiry
+            </Button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <form onSubmit={handleSubmit} noValidate className="space-y-6">
+          {/* Honeypot anti-spam field */}
+          <div className="hidden" aria-hidden="true">
+            <label htmlFor="food-website-field">Leave blank</label>
+            <input
+              type="text"
+              id="food-website-field"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              value={form.website || ""}
+              onChange={(e) => updateField("website", e.target.value)}
+            />
+          </div>
 
-      {status !== "idle" ? (
-        <div role={status === "error" ? "alert" : "status"} aria-live="polite" className={`rounded-xl border p-4 ${status === "success" ? "border-brand-signal/35 bg-brand-signal/10" : status === "error" ? "border-destructive/30 bg-destructive/8" : "border-border bg-muted/35"}`}>
-          <div className="flex items-start gap-3">{status === "success" ? <CheckCircle2 className="mt-0.5 size-5 text-brand-signal" aria-hidden /> : status === "error" ? <AlertCircle className="mt-0.5 size-5 text-destructive" aria-hidden /> : <LoaderCircle className="mt-0.5 size-5 animate-spin text-brand-primary" aria-hidden />}<div><p className="text-sm font-semibold text-foreground">{statusMessage}</p>{referenceId ? <p className="mt-1 font-mono text-xs text-muted-foreground">Reference: {referenceId}</p> : null}</div></div>
-          {status === "error" ? <div className="mt-4 flex flex-wrap gap-3"><a href={`mailto:${brand.salesEmail}`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-primary hover:text-brand-signal"><Mail className="size-4" aria-hidden />Email trade desk</a>{whatsappHref ? <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-primary hover:text-brand-signal"><MessageCircle className="size-4" aria-hidden />WhatsApp</a> : null}</div> : null}
-        </div>
-      ) : null}
-    </form>
+          {/* STEP 1: BUYER PROFILE */}
+          {(compact || step === 1) && (
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField id="fullName" label="Full Name" required error={errors.fullName}>
+                  <input
+                    type="text"
+                    id="fullName"
+                    autoComplete="name"
+                    placeholder="e.g. Marcus Vance"
+                    value={form.fullName}
+                    onChange={(e) => updateField("fullName", e.target.value)}
+                    className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  />
+                </FormField>
+
+                <FormField id="companyName" label="Company / Entity" required error={errors.companyName}>
+                  <input
+                    type="text"
+                    id="companyName"
+                    autoComplete="organization"
+                    placeholder="e.g. Vance Food Imports LLC"
+                    value={form.companyName}
+                    onChange={(e) => updateField("companyName", e.target.value)}
+                    className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  />
+                </FormField>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField id="email" label="Business Email" required error={errors.email}>
+                  <input
+                    type="email"
+                    id="email"
+                    autoComplete="email"
+                    placeholder="name@company.com"
+                    value={form.email}
+                    onChange={(e) => updateField("email", e.target.value)}
+                    className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  />
+                </FormField>
+
+                <FormField id="phone" label="Direct Phone / WhatsApp" required error={errors.phone} hint="Include country code">
+                  <input
+                    type="tel"
+                    id="phone"
+                    autoComplete="tel"
+                    placeholder="+971 50 000 0000"
+                    value={form.phone}
+                    onChange={(e) => updateField("phone", e.target.value)}
+                    className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  />
+                </FormField>
+              </div>
+
+              <FormField id="country" label="Operating Country" required error={errors.country}>
+                <select
+                  id="country"
+                  value={form.country}
+                  onChange={(e) => updateField("country", e.target.value)}
+                  className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                >
+                  <option value="">Select destination country…</option>
+                  <optgroup label="Popular Trade Markets">
+                    {popularTradeCountries.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="All Countries (ISO 3166)">
+                    {allCountries.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </optgroup>
+                </select>
+              </FormField>
+
+              {!compact && (
+                <div className="flex justify-end pt-4">
+                  <Button
+                    type="button"
+                    onClick={handleNextStep}
+                    className="inline-flex items-center gap-2 rounded-xl px-6 font-semibold"
+                  >
+                    Continue to Commodity Specs
+                    <ArrowRight className="size-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* STEP 2: COMMODITY SPECS & INCOTERMS */}
+          {(compact || step === 2) && (
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField id="category" label="Product Category" required error={errors.category}>
+                  <select
+                    id="category"
+                    value={form.category}
+                    onChange={(e) => updateField("category", e.target.value)}
+                    className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  >
+                    <option value="">Select commodity category…</option>
+                    {categoryOptions.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </FormField>
+
+                <FormField id="product" label="Specific Variety / Product" error={errors.product} hint="e.g. Turmeric Powder (3% Curcumin)">
+                  <input
+                    type="text"
+                    id="product"
+                    placeholder="e.g. Salem Turmeric, 1121 Basmati Rice"
+                    value={form.product}
+                    onChange={(e) => updateField("product", e.target.value)}
+                    className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  />
+                </FormField>
+              </div>
+
+              {/* Dynamic Other Category */}
+              {form.category === "Other" && (
+                <FormField id="otherCategory" label="Specify Custom Category" required error={errors.otherCategory}>
+                  <input
+                    type="text"
+                    id="otherCategory"
+                    placeholder="Describe your specific commodity type"
+                    value={form.otherCategory}
+                    onChange={(e) => updateField("otherCategory", e.target.value)}
+                    className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  />
+                </FormField>
+              )}
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField id="quantity" label="Approximate Quantity" error={errors.quantity} hint="e.g. 2x 20ft FCL or 50 MT">
+                  <input
+                    type="text"
+                    id="quantity"
+                    placeholder="e.g. 2x 20ft FCL / 50 MT"
+                    value={form.quantity}
+                    onChange={(e) => updateField("quantity", e.target.value)}
+                    className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  />
+                </FormField>
+
+                <FormField id="destinationPort" label="Destination Port / Terminal" error={errors.destinationPort} hint="Port of Discharge">
+                  <input
+                    type="text"
+                    id="destinationPort"
+                    placeholder="e.g. Jebel Ali, Rotterdam, Singapore Port"
+                    value={form.destinationPort}
+                    onChange={(e) => updateField("destinationPort", e.target.value)}
+                    className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  />
+                </FormField>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                {/* Incoterms Selector with Modal Trigger */}
+                <FormField
+                  id="incoterm"
+                  label="Preferred Incoterm® 2020"
+                  error={errors.incoterm}
+                  hint="Trade delivery terms"
+                >
+                  <div className="space-y-1.5">
+                    <select
+                      id="incoterm"
+                      value={form.incoterm}
+                      onChange={(e) => updateField("incoterm", e.target.value)}
+                      className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    >
+                      <option value="">Select Incoterm (Optional)…</option>
+                      {incotermOptions.map((term) => (
+                        <option key={term} value={term}>
+                          {term}
+                        </option>
+                      ))}
+                    </select>
+
+                    <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                      <button
+                        type="button"
+                        onClick={() => setTradeModalOpen(true)}
+                        className="inline-flex items-center gap-1 font-semibold text-primary hover:underline"
+                      >
+                        <Scale className="size-3" />
+                        Incoterms® 2020 Guide
+                      </button>
+                      {activeIncotermDefinition && (
+                        <span className="truncate max-w-[200px] text-[11px] text-primary font-mono font-bold">
+                          {activeIncotermDefinition.code}: {activeIncotermDefinition.category}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </FormField>
+
+                <FormField id="packaging" label="Packaging Preference" error={errors.packaging}>
+                  <select
+                    id="packaging"
+                    value={form.packaging}
+                    onChange={(e) => updateField("packaging", e.target.value)}
+                    className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  >
+                    <option value="">Select packaging preference…</option>
+                    {packagingOptions.map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </select>
+                </FormField>
+              </div>
+
+              {form.incoterm === "Other" && (
+                <FormField id="otherIncoterm" label="Specify Delivery Terms" required error={errors.otherIncoterm}>
+                  <input
+                    type="text"
+                    id="otherIncoterm"
+                    placeholder="e.g. Delivered to Customs Bonded Warehouse"
+                    value={form.otherIncoterm}
+                    onChange={(e) => updateField("otherIncoterm", e.target.value)}
+                    className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm"
+                  />
+                </FormField>
+              )}
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField id="timeline" label="Procurement Timeline" error={errors.timeline}>
+                  <select
+                    id="timeline"
+                    value={form.timeline}
+                    onChange={(e) => updateField("timeline", e.target.value)}
+                    className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  >
+                    <option value="">Select target timeline…</option>
+                    {timelineOptions.map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </select>
+                </FormField>
+
+                <FormField id="source" label="Discovery Channel" error={errors.source} hint="How did you find us?">
+                  <select
+                    id="source"
+                    value={form.source}
+                    onChange={(e) => updateField("source", e.target.value)}
+                    className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  >
+                    <option value="">Select discovery channel…</option>
+                    {inquirySourceOptions.map((source) => (
+                      <option key={source} value={source}>
+                        {source}
+                      </option>
+                    ))}
+                  </select>
+                </FormField>
+              </div>
+
+              {form.source === "Other" && (
+                <FormField id="otherSource" label="Specify Discovery Channel" required error={errors.otherSource}>
+                  <input
+                    type="text"
+                    id="otherSource"
+                    placeholder="How did you hear about Harobal Foods?"
+                    value={form.otherSource}
+                    onChange={(e) => updateField("otherSource", e.target.value)}
+                    className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm"
+                  />
+                </FormField>
+              )}
+
+              <FormField id="message" label="Quality Parameters, Testing &amp; Packaging Notes" required error={errors.message}>
+                <textarea
+                  id="message"
+                  rows={4}
+                  placeholder="Detail your specifications: crop year, moisture limit, purity, ASTA color value, aflatoxin thresholds, private labelling, or mandatory certificates (FSSAI/APEDA/Halal/Kosher/BRC)…"
+                  value={form.message}
+                  onChange={(e) => updateField("message", e.target.value)}
+                  className="flex w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                />
+              </FormField>
+
+              {/* Status & Action Buttons */}
+              {status === "error" && statusMessage && (
+                <div role="alert" className="rounded-xl border border-destructive/20 bg-destructive/10 p-3 text-xs text-destructive flex items-center gap-2">
+                  <AlertCircle className="size-4 shrink-0" />
+                  <span>{statusMessage}</span>
+                </div>
+              )}
+
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-border">
+                {!compact ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handlePrevStep}
+                    disabled={status === "pending"}
+                    className="inline-flex items-center gap-2 rounded-xl"
+                  >
+                    <ArrowLeft className="size-4" />
+                    Back to Profile
+                  </Button>
+                ) : <div />}
+
+                <Button
+                  type="submit"
+                  disabled={status === "pending"}
+                  className="inline-flex items-center gap-2 rounded-xl px-7 font-bold shadow-lg shadow-primary/20"
+                >
+                  {status === "pending" ? (
+                    <>
+                      <LoaderCircle className="size-4 animate-spin" />
+                      Submitting to Trade Desk…
+                    </>
+                  ) : (
+                    <>
+                      <Send className="size-4" />
+                      Submit Commodity Inquiry
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
+        </form>
+      )}
+
+      {/* Trade & Incoterms Resource Modal */}
+      <TradeResourceModal
+        isOpen={tradeModalOpen}
+        onClose={() => setTradeModalOpen(false)}
+        onSelectIncoterm={(code) => updateField("incoterm", code)}
+      />
+    </div>
   );
 }

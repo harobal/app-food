@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const siteConfig = {
   appName: "Harobal Foods",
-  legalName: "Harobal Global Trading LLP",
+  legalName: "Harobal",
   defaultTitle: "Harobal Foods | Export-ready Foods & Agriculture",
   titleTemplate: "%s | Harobal Foods",
   description:

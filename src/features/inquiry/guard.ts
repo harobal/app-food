@@ -14,7 +14,7 @@ function prune(now: number) {
 export function checkInquiryGuard(ip: string, fingerprint: string, now = Date.now()) {
   prune(now);
   const attempts = recentByIp.get(ip) ?? [];
-  if (attempts.length >= 5) return { ok: false as const, reason: "rate" as const };
+  if (attempts.length >= 5) return { ok: false as const, reason: "rate_limited" as const };
   if (duplicateUntil.has(fingerprint)) return { ok: false as const, reason: "duplicate" as const };
   attempts.push(now);
   recentByIp.set(ip, attempts);
