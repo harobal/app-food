@@ -54,9 +54,8 @@ export function renderClientAcknowledgement({ inquiry, referenceId }: FoodInquir
 
       <!-- Section 1: Registered Commodity Matrix -->
       <div style="margin-bottom: 22px;">
-        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #2E6B55; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-          <span style="display: inline-block; width: 6px; height: 6px; background-color: #2E6B55; border-radius: 50%;"></span>
-          01. Registered Commodity Overview
+        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #2E6B55; margin-bottom: 8px;">
+          Registered Commodity Overview
         </div>
 
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="data-grid" style="border: 1px solid #E5ECE4; border-radius: 8px; overflow: hidden; border-collapse: separate; border-spacing: 0;">
@@ -92,8 +91,7 @@ export function renderClientAcknowledgement({ inquiry, referenceId }: FoodInquir
 
       <!-- Section 2: Delivery Roadmap & Timeline -->
       <div style="margin-bottom: 22px;">
-        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #2E6B55; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
-          <span style="display: inline-block; width: 6px; height: 6px; background-color: #2E6B55; border-radius: 50%;"></span>
+        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #2E6B55; margin-bottom: 10px;">
           Food Commodity Sourcing &amp; QA Roadmap
         </div>
 

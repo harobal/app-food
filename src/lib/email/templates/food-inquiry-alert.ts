@@ -86,9 +86,8 @@ export function renderFoodInquiryAlert({ inquiry, context, referenceId }: FoodIn
 
       <!-- Section 1: Buyer Profile -->
       <div style="margin-bottom: 22px;">
-        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #2E6B55; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-          <span style="display: inline-block; width: 6px; height: 6px; background-color: #2E6B55; border-radius: 50%;"></span>
-          01. Buyer &amp; Organization Profile
+        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #2E6B55; margin-bottom: 8px;">
+          Buyer &amp; Organization Profile
         </div>
 
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border: 1px solid #E5ECE4; border-radius: 8px; overflow: hidden; border-collapse: separate; border-spacing: 0;">
@@ -117,9 +116,8 @@ export function renderFoodInquiryAlert({ inquiry, context, referenceId }: FoodIn
 
       <!-- Section 2: Commodity Specifications & Commercial Terms -->
       <div style="margin-bottom: 22px;">
-        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #2E6B55; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-          <span style="display: inline-block; width: 6px; height: 6px; background-color: #2E6B55; border-radius: 50%;"></span>
-          02. Commodity Specifications &amp; Commercial Terms
+        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #2E6B55; margin-bottom: 8px;">
+          Commodity Specifications &amp; Commercial Terms
         </div>
 
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border: 1px solid #E5ECE4; border-radius: 8px; overflow: hidden; border-collapse: separate; border-spacing: 0;">
@@ -169,9 +167,8 @@ export function renderFoodInquiryAlert({ inquiry, context, referenceId }: FoodIn
 
       <!-- Section 3: Notes -->
       <div style="margin-bottom: 22px;">
-        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #2E6B55; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-          <span style="display: inline-block; width: 6px; height: 6px; background-color: #2E6B55; border-radius: 50%;"></span>
-          03. Quality, Compliance &amp; Packaging Notes
+        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #2E6B55; margin-bottom: 8px;">
+          Quality, Compliance &amp; Packaging Notes
         </div>
 
         <div style="background-color: #F8FAF8; border-left: 3px solid #2E6B55; border-top: 1px solid #E5ECE4; border-right: 1px solid #E5ECE4; border-bottom: 1px solid #E5ECE4; border-radius: 0 8px 8px 0; padding: 14px 16px; font-size: 13px; line-height: 1.6; color: #334155;">
