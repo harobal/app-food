@@ -1,7 +1,6 @@
-import { H_MARK_PATH } from "../../../brand/brand.ts";
+import { BRAND_LOGO_URL } from "./brand-assets.ts";
 
 export function renderEmailLogoHeader({
-  theme = "dark",
   showDescriptor = true,
   descriptor = "FOODS",
 }: {
@@ -9,40 +8,28 @@ export function renderEmailLogoHeader({
   showDescriptor?: boolean;
   descriptor?: string;
 } = {}): string {
-  const isDark = theme === "dark";
-  const markColor = isDark ? "#FFFFFF" : "#2E6B55";
-  const nameColor = isDark ? "#FFFFFF" : "#132F2A";
-  const descriptorColor = isDark ? "#6E9C62" : "#2E6B55";
-  const dividerColor = isDark ? "rgba(255, 255, 255, 0.28)" : "#DBE4D9";
-
   return `
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="vertical-align: middle;">
     <tr>
-      <td valign="middle" style="padding: 0;">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-          <tr>
-            <td valign="middle" style="padding-right: 14px;">
-              <svg viewBox="0 0 852 833" width="38" height="37" aria-hidden="true" focusable="false" style="display: block; vertical-align: middle;">
-                <path fill-rule="evenodd" fill="${markColor}" d="${H_MARK_PATH}" />
-              </svg>
-            </td>
-            <td valign="middle" style="padding-right: 14px;">
-              <div style="width: 1.5px; height: 32px; background-color: ${dividerColor};"></div>
-            </td>
-            <td valign="middle">
-              <div style="font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 20px; font-weight: 700; color: ${nameColor}; letter-spacing: 0.18em; line-height: 1; text-transform: uppercase;">
-                HAROBAL
-              </div>
-              ${
-                showDescriptor
-                  ? `<div style="font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 8px; font-weight: 600; color: ${descriptorColor}; letter-spacing: 0.28em; text-transform: uppercase; margin-top: 5px; line-height: 1;">
-                      ${descriptor}
-                    </div>`
-                  : ""
-              }
-            </td>
-          </tr>
-        </table>
+      <td valign="middle" style="padding-right: 12px;">
+        <div style="width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center;">
+          <img src="${BRAND_LOGO_URL}" width="34" height="33" alt="Harobal Foods" style="display: block; border: 0; outline: none; text-decoration: none; vertical-align: middle; width: 34px; height: 33px;" />
+        </div>
+      </td>
+      <td valign="middle" style="padding-right: 12px;">
+        <div style="width: 1.5px; height: 26px; background-color: #DBE4D9;"></div>
+      </td>
+      <td valign="middle">
+        <div style="font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 19px; font-weight: 800; color: #132F2A; letter-spacing: 0.18em; line-height: 1; text-transform: uppercase;">
+          HAROBAL
+        </div>
+        ${
+          showDescriptor
+            ? `<div style="font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 8.5px; font-weight: 700; color: #2E6B55; letter-spacing: 0.26em; text-transform: uppercase; margin-top: 3px; line-height: 1;">
+                ${descriptor}
+              </div>`
+            : ""
+        }
       </td>
     </tr>
   </table>
