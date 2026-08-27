@@ -167,7 +167,7 @@ export function FoodsHeader() {
               <a
                 href={siteConfig.primarySiteUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
               >
                 Main site
                 <ExternalLink aria-hidden className="size-3.5 ml-1" />
@@ -237,6 +237,7 @@ export function FoodsHeader() {
                     <FoodsLink
                       key={child.href}
                       href={child.href}
+                      aria-current={pathname.startsWith(child.href) ? "page" : undefined}
                       className={cn(
                         "rounded-md px-3 py-2.5 text-base font-medium transition-colors hover:bg-muted",
                         pathname.startsWith(child.href) && "bg-muted text-brand-primary font-semibold",
@@ -252,6 +253,7 @@ export function FoodsHeader() {
               <FoodsLink
                 key={item.href}
                 href={item.href}
+                aria-current={isRouteActive(item.href) ? "page" : undefined}
                 className={cn(
                   "rounded-md px-3 py-3 text-base font-medium transition-colors hover:bg-muted",
                   isRouteActive(item.href) && "bg-muted text-brand-primary font-semibold",
@@ -274,7 +276,7 @@ export function FoodsHeader() {
             <a
               href={siteConfig.primarySiteUrl}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               Visit Harobal main site
               <ExternalLink aria-hidden className="size-4 ml-1" />

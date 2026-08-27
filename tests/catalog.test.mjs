@@ -7,6 +7,7 @@ import {
   filterCatalogVariants,
   groupCatalogFamilies,
   parseCatalogFilters,
+  sanitizeCatalogFilters,
   serializeCatalogFilters,
 } from "../src/features/catalog/selectors/catalog-selectors.ts";
 
@@ -35,6 +36,15 @@ test("query state parses, normalizes, and serializes predictably", () => {
     serializeCatalogFilters(filters).toString(),
     "q=turmeric&category=Spices+%26+Herbs&form=Powder&sort=title-asc&page=2",
   );
+});
+
+test("unsupported catalogue filters are removed before filtering", () => {
+  const sanitized = sanitizeCatalogFilters(parseCatalogFilters(new URLSearchParams("category=Stone&form=Powder,Unknown&origin=Mars&q=x")), {
+    categories: ["Spices & Herbs"], forms: ["Powder"], origins: ["Gujarat"], certifications: ["Organic"],
+  });
+  assert.deepEqual(sanitized.categories, []);
+  assert.deepEqual(sanitized.forms, ["Powder"]);
+  assert.deepEqual(sanitized.origins, []);
 });
 
 test("family grouping reduces repeated variant titles without losing variants", () => {
@@ -82,6 +92,17 @@ test("validator reports duplicate slugs and missing required values", () => {
   const result = validateCatalogue(sample);
   assert.ok(result.issues.some((issue) => issue.field === "slug" && issue.message === "Duplicate slug."));
   assert.ok(result.issues.some((issue) => issue.field === "category"));
+});
+
+test("validator rejects unsupported taxonomy and trade terms", () => {
+  const sample = structuredClone(raw.slice(0, 1));
+  sample[0].category = "Unsupported category";
+  sample[0].origin_country = "Unknown";
+  sample[0].incoterms_supported = "FOB; MADE-UP";
+  const result = validateCatalogue(sample);
+  assert.ok(result.issues.some((issue) => issue.message === "Unsupported catalogue category."));
+  assert.ok(result.issues.some((issue) => issue.field === "origin_country"));
+  assert.ok(result.issues.some((issue) => issue.message.includes("MADE-UP")));
 });
 
 test("the advertised RFQ template exists", async () => {

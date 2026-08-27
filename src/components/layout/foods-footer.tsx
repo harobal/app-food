@@ -86,7 +86,7 @@ export function FoodsFooter() {
       <div className="border-t border-white/15 bg-black/10">
         <div className="container-shell flex flex-col gap-2 py-4 text-xs text-white/70 sm:flex-row sm:justify-between">
           <p>© {currentYear} {brand.legalName}. All rights reserved.</p>
-          <p>Quote-led supply with compliance and documentation alignment.</p>
+          <p className="flex flex-wrap items-center gap-2"><a href={`${siteConfig.primarySiteUrl}/privacy-policy`} className="hover:text-secondary">Privacy</a><span aria-hidden>·</span><a href={`${siteConfig.primarySiteUrl}/terms`} className="hover:text-secondary">Terms</a><span className="hidden sm:inline" aria-hidden>·</span><span>Quote-led supply with compliance and documentation alignment.</span></p>
         </div>
       </div>
     </footer>

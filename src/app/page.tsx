@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/config/site";
 import { ArrowRight, Check, ClipboardCheck, FileCheck2, PackageCheck, ShieldCheck, Snowflake, Sprout, Truck } from "lucide-react";
 import { foodsCategoriesNav } from "@/content/navigation";
 import { FoodsLink } from "@/components/pages/foods-link";
 import { Button } from "@/components/ui/button";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Agro Commodities & Food Products Exports from India",
-  description: "Source certified Indian spices, cereals, pulses, oilseeds, and processed agro foods with batch testing, container consolidation, and export logistics.",
-};
+  description: "Source certified Indian spices, cereals, pulses, oilseeds, and processed agro foods with batch testing, container consolidation, and export logistics.", path: "/" });
 
 const CAPABILITIES = [
   { icon: ShieldCheck, label: "Compliance discipline" },

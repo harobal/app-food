@@ -15,6 +15,24 @@ export const siteConfig = {
   themeColor: "#2E6B55",
 } as const;
 
+export const defaultSocialImage = "/media/harvest-meridian/foods-export-hero.webp";
+
+export function absoluteUrl(path = "/") {
+  return new URL(path, `${siteConfig.foodsSiteUrl}/`).toString();
+}
+
+export function createPageMetadata({ title, description, path, image = defaultSocialImage, index = true }: { title: string; description: string; path: string; image?: string; index?: boolean }): Metadata {
+  const url = absoluteUrl(path);
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: "website", locale: siteConfig.locale, siteName: siteConfig.appName, url, title, description, images: [{ url: absoluteUrl(image), alt: `${siteConfig.appName} — ${title}` }] },
+    twitter: { card: "summary_large_image", title, description, images: [absoluteUrl(image)] },
+    robots: index ? undefined : { index: false, follow: false },
+  };
+}
+
 function safeMetadataBase(url: string): URL {
   try {
     return new URL(url);
@@ -42,9 +60,7 @@ export const defaultMetadata: Metadata = {
     "agro commodities India",
     "food supply chain compliance",
   ],
-  alternates: {
-    canonical: siteConfig.foodsSiteUrl,
-  },
+  alternates: { canonical: absoluteUrl("/") },
   applicationName: siteConfig.appName,
   icons: {
     icon: [
@@ -69,11 +85,13 @@ export const defaultMetadata: Metadata = {
     siteName: siteConfig.appName,
     title: siteConfig.defaultTitle,
     description: siteConfig.description,
+    images: [{ url: absoluteUrl(defaultSocialImage), alt: "Harobal Foods export-ready food and agricultural commodities" }],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.defaultTitle,
     description: siteConfig.description,
+    images: [absoluteUrl(defaultSocialImage)],
   },
   robots: {
     index: true,

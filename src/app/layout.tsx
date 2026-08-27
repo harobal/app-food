@@ -6,6 +6,7 @@ import { FoodsFooter } from "@/components/layout/foods-footer";
 import { FoodsQuoteRequestProvider } from "@/features/quote-request";
 import { FloatingWhatsApp } from "@/components/layout/floating-whatsapp";
 import { BackToTop } from "@/components/layout/back-to-top";
+import { CookieBanner } from "@/components/layout/cookie-banner";
 import { OrganizationJsonLd } from "@/components/seo/organization-json-ld";
 import { Geist } from "next/font/google";
 
@@ -19,7 +20,7 @@ export default function FoodsLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={geist.variable}>
+    <html lang="en" className={geist.variable} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -29,12 +30,14 @@ export default function FoodsLayout({
         <OrganizationJsonLd />
       </head>
       <body className="flex flex-col min-h-screen bg-background">
+        <a href="#main-content" className="fixed left-4 top-4 z-[100] -translate-y-24 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-lg transition-transform focus:translate-y-0">Skip to main content</a>
         <FoodsQuoteRequestProvider>
           <FoodsHeader />
-          <main className="flex-1">{children}</main>
+          <main id="main-content" tabIndex={-1} className="flex-1">{children}</main>
           <FoodsFooter />
           <FloatingWhatsApp />
           <BackToTop />
+          <CookieBanner />
         </FoodsQuoteRequestProvider>
       </body>
     </html>

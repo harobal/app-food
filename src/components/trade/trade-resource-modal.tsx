@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Globe, Scale, X } from "lucide-react";
 import { IncotermsMatrix } from "./incoterms-matrix";
 import { TradePortals } from "./trade-portals";
@@ -14,17 +14,29 @@ export function TradeResourceModal({
   onClose: () => void;
   onSelectIncoterm?: (term: string) => void;
 }) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
+      if (event.key !== "Tab") return;
+      const focusable = dialogRef.current?.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      if (!focusable?.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     };
     if (isOpen) {
+      restoreFocusRef.current = document.activeElement as HTMLElement | null;
       document.body.style.overflow = "hidden";
       window.addEventListener("keydown", handleKeyDown);
+      requestAnimationFrame(() => dialogRef.current?.querySelector<HTMLElement>("button")?.focus());
     }
     return () => {
       document.body.style.overflow = "unset";
       window.removeEventListener("keydown", handleKeyDown);
+      if (isOpen) restoreFocusRef.current?.focus();
     };
   }, [isOpen, onClose]);
 
@@ -41,8 +53,10 @@ export function TradeResourceModal({
 
       {/* Modal Shell */}
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
+        aria-labelledby="trade-resource-title"
         className="relative flex max-h-[90vh] w-full max-w-4xl flex-col rounded-2xl border border-border bg-background shadow-2xl overflow-hidden"
       >
         {/* Header */}
@@ -52,7 +66,7 @@ export function TradeResourceModal({
               <Scale className="size-4.5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-foreground">
+              <h3 id="trade-resource-title" className="text-base font-bold text-foreground">
                 Incoterms® 2020 &amp; Food Export Compliance Standards
               </h3>
               <p className="text-xs text-muted-foreground">

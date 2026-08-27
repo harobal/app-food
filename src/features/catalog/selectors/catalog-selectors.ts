@@ -38,6 +38,18 @@ export function serializeCatalogFilters(filters: FoodsCatalogFilters) {
   return params;
 }
 
+export function sanitizeCatalogFilters(filters: FoodsCatalogFilters, options: { categories: string[]; forms: string[]; origins: string[]; certifications: string[] }): FoodsCatalogFilters {
+  const allowed = (values: string[], supported: string[]) => values.filter((value) => supported.includes(value));
+  return {
+    ...filters,
+    query: filters.query.slice(0, 120),
+    categories: allowed(filters.categories, options.categories),
+    forms: allowed(filters.forms, options.forms),
+    origins: allowed(filters.origins, options.origins),
+    certifications: allowed(filters.certifications, options.certifications),
+  };
+}
+
 function intersects(values: string[], selected: string[]) {
   return !selected.length || values.some((value) => selected.includes(value));
 }

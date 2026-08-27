@@ -9,6 +9,7 @@ export interface ZohoSmtpConfig {
 }
 
 export interface FoodInquiryData {
+  submissionType?: "inquiry" | "rfq" | "supplier";
   fullName: string;
   companyName: string;
   email: string;

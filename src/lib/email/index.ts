@@ -6,3 +6,4 @@ export * from "./templates/brand-header.ts";
 export * from "./templates/layout.ts";
 export * from "./templates/food-inquiry-alert.ts";
 export * from "./templates/client-acknowledgement.ts";
+export * from "./templates/rfq-emails.ts";

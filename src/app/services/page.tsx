@@ -1,12 +1,10 @@
-import type { Metadata } from "next";
-import { PageBreadcrumbs } from "@/components/layout/page-breadcrumbs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { createPageMetadata } from "@/config/site";
+import { TradeCapabilityPage } from "@/components/pages/support/trade-capability-page";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Agro Processing & Export Supply Chain Services",
   description:
-    "Compliance-led sourcing, quality control alignment, customized export packaging, and container logistics for foods and agri programs.",
-};
+    "Compliance-led sourcing, quality control alignment, customized export packaging, and container logistics for foods and agri programs.", path: "/services" });
 
 const services = [
   {
@@ -42,29 +40,5 @@ const services = [
 ] as const;
 
 export default function FoodsServicesPage() {
-  return (
-    <section className="section-space">
-      <div className="container-shell">
-        <div className="max-w-3xl">
-          <PageBreadcrumbs />
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-secondary">Services</p>
-          <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">Compliance-led export support</h1>
-          <p className="mt-4 text-base text-muted-foreground sm:text-lg">
-            We operate RFQ-first and execution-focused — aligning specs, packaging, documentation, and shipment planning to the destination market.
-          </p>
-        </div>
-
-        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {services.map((service) => (
-            <Card key={service.title} className="elevated-card">
-              <CardHeader>
-                <CardTitle className="text-lg">{service.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">{service.description}</CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  return <TradeCapabilityPage eyebrow="Services" title="Compliance-led export support" introduction="We operate RFQ-first and execution-focused — aligning specs, packaging, documentation, and shipment planning to the destination market." image="/media/harvest-meridian/foods-export-hero.webp" imageLabel="Food-export sourcing and execution context" items={services} />;
 }

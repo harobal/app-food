@@ -1,94 +1,20 @@
-import React from "react";
-import Link from "next/link";
-import { ArrowRight, Leaf, Wheat } from "lucide-react";
-import { siteConfig } from "@/config/site";
-import { HMark } from "@/brand";
-import { COLORS } from "@/brand/brand";
+import { ArrowRight, Compass, Search } from "lucide-react";
+import { FoodsLink } from "@/components/pages/foods-link";
+import { Button } from "@/components/ui/button";
 
-export const metadata = {
-  title: "404 — Harvest Route Unavailable | Harobal Foods",
-  description: "The requested agriculture corridor could not be located.",
-};
+export const metadata = { title: { absolute: "Page Not Found | Harobal Foods" }, description: "The requested Harobal Foods page could not be located.", robots: { index: false, follow: false } };
 
 export default function GlobalNotFound() {
-  return (
-    <div className="fixed inset-0 z-[100] flex flex-col lg:flex-row bg-background overflow-hidden selection:bg-accent/20">
-      
-      {/* LEFT PANEL - Dark Theme (Primary) */}
-      <div className="relative flex flex-col justify-between w-full lg:w-5/12 p-10 sm:p-16 border-b lg:border-b-0 lg:border-r border-accent/20 bg-primary text-primary-foreground">
-        
-        <div className="relative z-10">
-          <HMark size={48} color={COLORS.accent} />
-        </div>
-        
-        <div className="relative z-10 space-y-6 mt-16 lg:mt-0">
-          <p className="font-sans text-xs font-semibold tracking-[0.25em] uppercase text-accent">
-            System Error Protocol
-          </p>
-          <h1 className="text-8xl sm:text-[160px] leading-[0.8] font-serif text-primary-foreground tracking-tighter -ml-2">
-            404
-          </h1>
-          <div className="h-[2px] w-16 bg-accent" />
-          <p className="font-serif text-2xl sm:text-3xl text-primary-foreground/80 leading-snug max-w-sm">
-            The requested harvest route is uncharted.
-          </p>
-        </div>
-
-        <div className="relative z-10 hidden lg:block">
-          <p className="text-[10px] text-primary-foreground/50 font-sans uppercase tracking-[0.3em]">
-            {siteConfig.appName ?? "Harobal Foods"} • Agriculture & Organic Commodities
-          </p>
-        </div>
-      </div>
-
-      {/* RIGHT PANEL - Light Theme (Background) */}
-      <div className="relative flex flex-col justify-center w-full lg:w-7/12 p-8 sm:p-16 lg:p-24 bg-background">
-        
-        <div className="max-w-xl space-y-12">
-          
-          <div className="space-y-4">
-            <h2 className="text-3xl sm:text-4xl font-serif text-foreground">
-              Coordinates Lost
-            </h2>
-            <p className="text-base sm:text-lg text-muted-foreground font-sans leading-relaxed">
-              We cannot locate the specification, organic commodity, or supply chain corridor you are looking for. It may have been relocated, archived, or is currently inaccessible.
-            </p>
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-2">
-            
-            {/* Return Hub Card */}
-            <Link href="/" className="group block h-full">
-              <div className="h-full p-8 rounded-xl border border-border bg-card shadow-sm hover:shadow-md hover:border-accent/40 hover:-translate-y-1 transition-all duration-300">
-                <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center mb-6 group-hover:bg-accent/10 transition-colors">
-                  <Leaf className="size-6 text-primary group-hover:text-accent transition-colors" />
-                </div>
-                <h3 className="text-lg font-serif font-semibold text-card-foreground mb-2">Return to Hub</h3>
-                <p className="text-sm text-muted-foreground font-sans mb-6">Navigate back to the main organic dashboard.</p>
-                <div className="text-sm font-semibold text-primary inline-flex items-center group-hover:text-accent transition-colors">
-                  Go to Homepage <ArrowRight className="ml-2 size-4" />
-                </div>
-              </div>
-            </Link>
-
-            {/* Contact Desk Card */}
-            <Link href="/contact" className="group block h-full">
-              <div className="h-full p-8 rounded-xl border border-border bg-card shadow-sm hover:shadow-md hover:border-accent/40 hover:-translate-y-1 transition-all duration-300">
-                <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center mb-6 group-hover:bg-accent/10 transition-colors">
-                  <Wheat className="size-6 text-primary group-hover:text-accent transition-colors" />
-                </div>
-                <h3 className="text-lg font-serif font-semibold text-card-foreground mb-2">Contact Desk</h3>
-                <p className="text-sm text-muted-foreground font-sans mb-6">Require manual sourcing or harvest assistance?</p>
-                <div className="text-sm font-semibold text-primary inline-flex items-center group-hover:text-accent transition-colors">
-                  Reach out to us <ArrowRight className="ml-2 size-4" />
-                </div>
-              </div>
-            </Link>
-
-          </div>
-          
-        </div>
+  return <main className="relative isolate flex min-h-[calc(100vh-7rem)] items-center overflow-hidden bg-brand-ink text-white">
+    <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,25,20,.97),rgba(7,25,20,.76),rgba(7,25,20,.28)),url('/media/harvest-meridian/foods-export-hero.webp')] bg-cover bg-center" aria-hidden />
+    <div className="container-shell relative py-16 sm:py-24">
+      <div className="max-w-2xl">
+        <p className="text-xs font-bold uppercase tracking-[.22em] text-brand-gold">404 · Route unavailable</p>
+        <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-6xl">This sourcing route could not be found.</h1>
+        <p className="mt-5 max-w-xl text-base leading-7 text-white/72">The page may have moved, or the product link may no longer be current. Continue through the catalogue or send the sourcing desk a custom requirement.</p>
+        <div className="mt-8 flex flex-wrap gap-3"><Button asChild className="bg-accent text-accent-foreground hover:bg-[#d9a748]"><FoodsLink href="/catalog"><Search className="size-4" /> Browse catalogue</FoodsLink></Button><Button asChild variant="outline" className="border-white/25 bg-white/5 text-white hover:bg-white/12 hover:text-white"><FoodsLink href="/rfq"><Compass className="size-4" /> Open RFQ</FoodsLink></Button></div>
+        <FoodsLink href="/contact" className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-white/75 hover:text-brand-gold">Ask the sourcing desk <ArrowRight className="size-4" /></FoodsLink>
       </div>
     </div>
-  );
+  </main>;
 }

@@ -7,6 +7,6 @@ export const brand = {
   supportLine: "Agriculture, Food Ingredients & Value-Added Commodities",
   email: "foods@harobal.com",
   salesEmail: "foods@harobal.com",
-  phone: process.env.NEXT_PUBLIC_CONTACT_PHONE ?? "",
-  whatsapp: process.env.NEXT_PUBLIC_CONTACT_WHATSAPP ?? "",
+  phone: process.env.NEXT_PUBLIC_CONTACT_PHONE?.trim() ?? "",
+  whatsapp: process.env.NEXT_PUBLIC_CONTACT_WHATSAPP?.trim() ?? "",
 };

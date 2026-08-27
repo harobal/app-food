@@ -86,6 +86,11 @@ export function validateInquiry(input: unknown, now = Date.now()): InquiryValida
   const message = multiline(values.message);
   const website = text(values.website);
   const startedAt = typeof values.startedAt === "number" ? values.startedAt : 0;
+  const submissionType = values.submissionType === "rfq" || values.submissionType === "supplier" ? values.submissionType : "inquiry";
+
+  if (values.consent !== true) {
+    errors.consent = "Confirm that Harobal may use these details to respond to your requirement.";
+  }
 
   if (!category || !validCategories.has(category)) {
     errors.category = "Select a valid product category.";
@@ -127,6 +132,7 @@ export function validateInquiry(input: unknown, now = Date.now()): InquiryValida
     spam: false,
     errors: {},
     data: {
+      submissionType,
       fullName: text(values.fullName),
       companyName: text(values.companyName),
       email: text(values.email).toLowerCase(),

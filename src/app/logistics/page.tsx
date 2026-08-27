@@ -1,12 +1,10 @@
-import type { Metadata } from "next";
-import { PageBreadcrumbs } from "@/components/layout/page-breadcrumbs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { createPageMetadata } from "@/config/site";
+import { TradeCapabilityPage } from "@/components/pages/support/trade-capability-page";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Cold Chain, Container Logistics & Incoterms",
   description:
-    "Global container shipping, cold-chain preservation, export customs documentation, and multi-modal freight coordination.",
-};
+    "Global container shipping, cold-chain preservation, export customs documentation, and multi-modal freight coordination.", path: "/logistics", image: "/media/harvest-meridian/cold-chain-logistics.webp" });
 
 const topics = [
   {
@@ -42,29 +40,5 @@ const topics = [
 ] as const;
 
 export default function FoodsLogisticsPage() {
-  return (
-    <section className="section-space">
-      <div className="container-shell">
-        <div className="max-w-3xl">
-          <PageBreadcrumbs />
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-secondary">Logistics</p>
-          <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">Shipment and delivery considerations</h1>
-          <p className="mt-4 text-base text-muted-foreground sm:text-lg">
-            Accurate quotes depend on route and requirements. Share destination port, incoterms, packaging format, and timing.
-          </p>
-        </div>
-
-        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {topics.map((item) => (
-            <Card key={item.title} className="elevated-card">
-              <CardHeader>
-                <CardTitle className="text-lg">{item.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">{item.description}</CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  return <TradeCapabilityPage eyebrow="Logistics" title="Shipment and delivery considerations" introduction="Accurate quotes depend on route and requirements. Share destination port, incoterms, packaging format, and timing." image="/media/harvest-meridian/cold-chain-logistics.webp" imageLabel="Cold-chain and port execution context" items={topics} />;
 }

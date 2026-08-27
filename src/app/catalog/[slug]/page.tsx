@@ -10,6 +10,8 @@ import { PageBreadcrumbs } from "@/components/layout/page-breadcrumbs";
 import { Badge } from "@/components/ui/badge";
 import { FoodsLink } from "@/components/pages/foods-link";
 import { FoodsProductActions } from "@/components/pages/product/product-actions";
+import { JsonLd } from "@/components/seo/json-ld";
+import { absoluteUrl, siteConfig } from "@/config/site";
 
 type PageParams = { params: Promise<{ slug: string }> };
 
@@ -26,10 +28,14 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
   const product = getFoodsProductBySlug(slug);
   if (!product) return { title: "Product Not Found" };
   const categoryImage = getFamilyMedia(product.category, product.heroImage);
+  const title = `${product.title} — ${product.form}, ${product.grade} from ${product.originState}`;
+  const canonical = absoluteUrl(`/catalog/${product.slug}`);
   return {
-    title: `${product.title} — ${product.form}, ${product.grade} from ${product.originState}`,
+    title,
     description: product.summary,
-    openGraph: { title: `${product.title} | Harobal Foods`, description: product.summary, images: [{ url: categoryImage }] },
+    alternates: { canonical },
+    openGraph: { type: "website", url: canonical, siteName: siteConfig.appName, title: `${title} | Harobal Foods`, description: product.summary, images: [{ url: absoluteUrl(categoryImage), alt: `${product.category} sourcing context for ${product.title}` }] },
+    twitter: { card: "summary_large_image", title, description: product.summary, images: [absoluteUrl(categoryImage)] },
   };
 }
 
@@ -43,9 +49,39 @@ export default async function FoodsCatalogDetailPage({ params }: PageParams) {
     .filter((family) => family.category === product.category && !family.variants.some((variant) => variant.slug === product.slug))
     .slice(0, 3);
   const quoteHint = "For accurate quoting, share destination port, incoterms, packaging format, and required certifications.";
+  const canonical = absoluteUrl(`/catalog/${product.slug}`);
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "@id": `${canonical}#breadcrumb`,
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+        { "@type": "ListItem", position: 2, name: "Catalogue", item: absoluteUrl("/catalog") },
+        { "@type": "ListItem", position: 3, name: product.title, item: canonical },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "@id": `${canonical}#product`,
+      name: product.title,
+      description: product.summary,
+      sku: product.id,
+      category: `${product.category} > ${product.subCategory}`,
+      url: canonical,
+      image: [absoluteUrl(categoryImage)],
+      brand: { "@type": "Brand", name: siteConfig.appName },
+      countryOfOrigin: { "@type": "Country", name: "India" },
+      additionalProperty: [
+        ["Form", product.form], ["Grade", product.grade], ["Origin state", product.originState], ["Typical MOQ", product.moq || "On request"], ["Typical lead time", `${product.leadTimeDays} days`],
+      ].map(([name, value]) => ({ "@type": "PropertyValue", name, value })),
+    },
+  ];
 
   return (
     <>
+      <JsonLd data={structuredData} />
       <section className="border-b border-border bg-background">
         <div className="container-shell py-6"><PageBreadcrumbs /></div>
       </section>

@@ -8,15 +8,12 @@ import {
   CheckCircle2,
   Copy,
   LoaderCircle,
-  Mail,
-  MessageCircle,
   Scale,
   Send,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   allCountries,
-  brand,
   categoryOptions,
   incotermOptions,
   inquirySourceOptions,
@@ -94,7 +91,7 @@ function FormField({
   );
 }
 
-export function InquiryForm({ compact = false }: { compact?: boolean }) {
+export function InquiryForm({ compact = false, purpose = "buyer" }: { compact?: boolean; purpose?: "buyer" | "supplier" }) {
   const [form, setForm] = useState<InquiryFormValues>(initialState);
   const [errors, setErrors] = useState<InquiryFieldErrors>({});
   const [step, setStep] = useState<1 | 2>(1);
@@ -219,7 +216,7 @@ export function InquiryForm({ compact = false }: { compact?: boolean }) {
                 {step}
               </span>
               <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                {step === 1 ? "Step 1: Buyer Profile" : "Step 2: Commodity Specs & Incoterms"}
+                {step === 1 ? `Step 1: ${purpose === "supplier" ? "Supplier" : "Buyer"} Profile` : `Step 2: ${purpose === "supplier" ? "Supply Capacity & Product Details" : "Commodity Specs & Incoterms"}`}
               </span>
             </div>
             <span className="text-xs font-semibold text-muted-foreground">
@@ -249,7 +246,7 @@ export function InquiryForm({ compact = false }: { compact?: boolean }) {
               Thank you, {form.fullName}
             </h3>
             <p className="mx-auto max-w-lg text-sm text-muted-foreground leading-relaxed">
-              Your commodity requirement brief for <strong>{form.companyName || "your entity"}</strong> has been registered with our trade desk. An acknowledgement receipt has been dispatched to <strong>{form.email}</strong>.
+              Your {purpose === "supplier" ? "supplier capability profile" : "commodity requirement brief"} for <strong>{form.companyName || "your entity"}</strong> has been registered with our trade desk. An acknowledgement receipt has been dispatched to <strong>{form.email}</strong>.
             </p>
           </div>
 
@@ -633,7 +630,7 @@ export function InquiryForm({ compact = false }: { compact?: boolean }) {
                   ) : (
                     <>
                       <Send className="size-4" />
-                      Submit Commodity Inquiry
+                      {purpose === "supplier" ? "Submit Supplier Profile" : "Submit Commodity Inquiry"}
                     </>
                   )}
                 </Button>

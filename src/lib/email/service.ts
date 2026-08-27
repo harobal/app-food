@@ -2,6 +2,7 @@ import { getZohoSmtpConfig } from "./config.ts";
 import { sendEmail } from "./client.ts";
 import { renderFoodInquiryAlert } from "./templates/food-inquiry-alert.ts";
 import { renderClientAcknowledgement } from "./templates/client-acknowledgement.ts";
+import { renderRfqClientReceipt, renderRfqDeskAlert } from "./templates/rfq-emails.ts";
 import type { FoodDualEmailResult, FoodInquiryEmailPayload, SendEmailResult } from "./types.ts";
 
 export async function sendFoodInquiryEmails(
@@ -19,8 +20,9 @@ export async function sendFoodInquiryEmails(
   }
 
   // Render both food email templates
-  const deskAlert = renderFoodInquiryAlert(payload);
-  const clientAck = renderClientAcknowledgement(payload);
+  const isRfq = payload.inquiry.submissionType === "rfq";
+  const deskAlert = isRfq ? renderRfqDeskAlert(payload) : renderFoodInquiryAlert(payload);
+  const clientAck = isRfq ? renderRfqClientReceipt(payload) : renderClientAcknowledgement(payload);
 
   // Dispatch both emails concurrently
   const [deskResult, clientResult] = await Promise.allSettled([

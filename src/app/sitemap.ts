@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
+import { getFoodsCatalogListItems } from "@/features/catalog/data/catalog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.foodsSiteUrl;
@@ -22,5 +23,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route === "" ? 1 : route === "/catalog" || route === "/rfq" ? 0.9 : 0.8,
   }));
 
-  return routes;
+  const products = getFoodsCatalogListItems().map((product) => ({
+    url: `${baseUrl}/catalog/${product.slug}`,
+    lastModified,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  return [...routes, ...products];
 }

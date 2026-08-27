@@ -33,6 +33,10 @@ const requiredStrings = stringFields.filter(
   (field) => field !== "variant" && field !== "hs_code_hint",
 );
 
+const supportedCategories = new Set(["Cereals & Grains", "Dehydrated & Processed", "Fresh Fruits", "Fresh Vegetables", "Nuts & Dry Fruits", "Oilseeds & Oils", "Pulses & Lentils", "Spices & Herbs", "Sweeteners"]);
+const supportedIncoterms = new Set(["EXW", "FCA", "CPT", "CIP", "DAP", "DPU", "DDP", "FAS", "FOB", "CFR", "CIF"]);
+const semicolonFields = ["incoterms_supported", "key_quality_parameters", "key_safety_tests", "certifications_available", "use_cases"] as const;
+
 function normalizedString(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
 }
@@ -80,6 +84,20 @@ export function validateCatalogue(input: unknown): CatalogueValidationResult {
     }
     if (record.slug && !/^(?:[a-z0-9]+-?)+$/.test(record.slug)) {
       issues.push({ index, field: "slug", message: "Slug is not route-safe." });
+    }
+    if (record.category && !supportedCategories.has(record.category)) {
+      issues.push({ index, field: "category", message: "Unsupported catalogue category." });
+    }
+    if (record.origin_country !== "India") {
+      issues.push({ index, field: "origin_country", message: "Unsupported or unexpected origin country." });
+    }
+    for (const field of semicolonFields) {
+      if (record[field].split(";").some((part) => !part.trim())) {
+        issues.push({ index, field, message: "Contains an empty semicolon-delimited value." });
+      }
+    }
+    for (const term of record.incoterms_supported.split(";").map((part) => part.trim()).filter(Boolean)) {
+      if (!supportedIncoterms.has(term)) issues.push({ index, field: "incoterms_supported", message: `Unsupported Incoterm: ${term}.` });
     }
     if (record.id && ids.has(record.id)) {
       issues.push({ index, field: "id", message: "Duplicate ID." });

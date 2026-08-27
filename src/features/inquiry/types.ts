@@ -9,6 +9,7 @@ export type Incoterm = (typeof incoterms)[number];
 export type InquirySource = (typeof inquirySources)[number];
 
 export type InquiryFormValues = {
+  submissionType?: "inquiry" | "rfq" | "supplier";
   // Step 1: Buyer Profile
   fullName: string;
   companyName: string;
@@ -37,6 +38,7 @@ export type InquiryFormValues = {
 };
 
 export type InquirySubmission = {
+  submissionType: "inquiry" | "rfq" | "supplier";
   fullName: string;
   companyName: string;
   email: string;
