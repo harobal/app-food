@@ -10,7 +10,7 @@ export function TradeCapabilityPage({ eyebrow, title, introduction, image, image
     <section className="relative isolate overflow-hidden border-b border-white/10 bg-brand-ink text-white">
       <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `linear-gradient(90deg,rgba(7,25,20,.96),rgba(7,25,20,.76) 52%,rgba(7,25,20,.18)),url(${image})` }} aria-hidden />
       <div className="container-shell relative py-12 sm:py-16">
-        <div className="max-w-3xl [&_a]:!text-white/65 [&_span]:!text-white/75 [&_svg]:!text-white/45"><PageBreadcrumbs /></div>
+        <div className="max-w-3xl [&_a]:!text-white/82 [&_span]:!text-white [&_svg]:!text-white/72"><PageBreadcrumbs /></div>
         <div className="mt-7 max-w-2xl"><p className="text-xs font-bold uppercase tracking-[.2em] text-brand-gold">{eyebrow}</p><h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{title}</h1><p className="mt-4 text-base leading-7 text-white/78 sm:text-lg">{introduction}</p></div>
         <p className="mt-8 inline-flex rounded-full border border-white/20 bg-black/20 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[.15em] text-white/70 backdrop-blur">{imageLabel}</p>
       </div>

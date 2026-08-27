@@ -1,0 +1,2 @@
+export const THEME_STORAGE_KEY = "harobal-theme";
+export const themeInitializationScript = `(() => { try { const stored = localStorage.getItem("${THEME_STORAGE_KEY}"); const dark = stored === "dark" || (stored !== "light" && matchMedia("(prefers-color-scheme: dark)").matches); document.documentElement.classList.toggle("dark", dark); document.documentElement.dataset.theme = dark ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; } })();`;

@@ -11,6 +11,7 @@ import { useFoodsQuoteRequest } from "@/features/quote-request";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { MobileNavSheet } from "@/components/layout/mobile-nav-sheet";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 function DesktopNavDropdown({
   label,
@@ -114,12 +115,16 @@ export function FoodsHeader() {
             onClick={() => setOpen(false)} 
             aria-label="Harobal Foods home"
           >
-            <span className="md:hidden">
+            <span className="md:hidden dark:hidden">
               <HarobalLogo variant="horizontal" size="xs" showDescriptor />
             </span>
-            <span className="hidden md:inline-flex">
+            <span className="hidden dark:inline-flex md:dark:hidden">
+              <HarobalLogo variant="dark-horizontal" size="xs" showDescriptor />
+            </span>
+            <span className="hidden md:inline-flex dark:md:hidden">
               <HarobalLogo variant="horizontal" size="sm" showDescriptor />
             </span>
+            <span className="hidden dark:md:inline-flex"><HarobalLogo variant="dark-horizontal" size="sm" showDescriptor /></span>
           </FoodsLink>
 
           <nav aria-label="Primary navigation" className="hidden items-center gap-1 xl:flex">
@@ -163,6 +168,7 @@ export function FoodsHeader() {
           </nav>
 
           <div className="hidden shrink-0 items-center gap-2 xl:flex">
+            <ThemeToggle />
             <Button variant="ghost" size="sm" asChild>
               <a
                 href={siteConfig.primarySiteUrl}
@@ -190,7 +196,7 @@ export function FoodsHeader() {
             </Button>
           </div>
 
-          <button
+          <div className="flex items-center gap-2 xl:hidden"><ThemeToggle /><button
             type="button"
             className="inline-flex size-10 shrink-0 items-center justify-center rounded-md transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring xl:hidden"
             onClick={() => setOpen((prev) => !prev)}
@@ -199,7 +205,7 @@ export function FoodsHeader() {
             aria-controls="foods-mobile-navigation"
           >
             <Menu className="size-6" aria-hidden />
-          </button>
+          </button></div>
         </div>
       </header>
 
@@ -210,7 +216,7 @@ export function FoodsHeader() {
         label="Harobal Foods navigation"
       >
         <div className="border-b border-border pb-6 pr-12">
-          <HarobalLogo variant="horizontal" size="sm" showDescriptor />
+          <span className="dark:hidden"><HarobalLogo variant="horizontal" size="sm" showDescriptor /></span><span className="hidden dark:inline-flex"><HarobalLogo variant="dark-horizontal" size="sm" showDescriptor /></span>
         </div>
 
         <nav aria-label="Mobile navigation" className="flex flex-1 flex-col gap-1 py-6">

@@ -21,7 +21,7 @@ export default function FoodsCatalogPage() {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,25,20,.96)_0%,rgba(7,25,20,.82)_45%,rgba(7,25,20,.28)_100%),url('/media/harvest-meridian/foods-export-hero.webp')] bg-cover bg-center" aria-hidden />
         <div className="container-shell relative py-8 sm:py-12">
           <div className="max-w-3xl">
-          <div className="[&_a]:!text-white/65 [&_span]:!text-white/75 [&_svg]:!text-white/45">
+          <div className="[&_a]:!text-white/82 [&_span]:!text-white [&_svg]:!text-white/72">
             <PageBreadcrumbs />
           </div>
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-gold">Catalogue</p>
