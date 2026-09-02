@@ -16,10 +16,10 @@ const raw = JSON.parse(
 );
 const validation = validateCatalogue(raw);
 
-test("all 750 catalogue records satisfy the runtime contract", () => {
-  assert.equal(validation.records.length, 750);
+test("all 793 plant-based and honey-exception catalogue records satisfy the runtime contract", () => {
+  assert.equal(validation.records.length, 793);
   assert.deepEqual(validation.issues, []);
-  assert.equal(new Set(validation.records.map((record) => record.slug)).size, 750);
+  assert.equal(new Set(validation.records.map((record) => record.slug)).size, 793);
 });
 
 test("query state parses, normalizes, and serializes predictably", () => {
@@ -36,6 +36,33 @@ test("query state parses, normalizes, and serializes predictably", () => {
     serializeCatalogFilters(filters).toString(),
     "q=turmeric&category=Spices+%26+Herbs&form=Powder&sort=title-asc&page=2",
   );
+});
+
+test("filter query state preserves option labels containing commas", () => {
+  const options = {
+    categories: ["Spices & Herbs"],
+    forms: ["Whole", "Powder"],
+    origins: ["Assam, India", "Gujarat"],
+    certifications: ["Organic, subject to lot evidence", "Lot COA"],
+  };
+  const filters = parseCatalogFilters(
+    new URLSearchParams(
+      "origin=Assam%2C+India&cert=Organic%2C+subject+to+lot+evidence",
+    ),
+    options,
+  );
+
+  assert.deepEqual(filters.origins, ["Assam, India"]);
+  assert.deepEqual(filters.certifications, ["Organic, subject to lot evidence"]);
+
+  const multiple = {
+    ...filters,
+    origins: ["Assam, India", "Gujarat"],
+    forms: ["Whole", "Powder"],
+  };
+  const roundTrip = parseCatalogFilters(serializeCatalogFilters(multiple), options);
+  assert.deepEqual(roundTrip.origins, multiple.origins);
+  assert.deepEqual(roundTrip.forms, multiple.forms);
 });
 
 test("unsupported catalogue filters are removed before filtering", () => {
@@ -65,11 +92,11 @@ test("family grouping reduces repeated variant titles without losing variants", 
   }));
   const families = groupCatalogFamilies(items);
   // Garlic exists legitimately in both Vegetables and Spices, so category-safe
-  // grouping yields 184 families from 183 repeated display titles.
-  assert.equal(families.length, 184);
+  // Honey is the sole approved animal-derived exception.
+  assert.equal(families.length, 227);
   assert.equal(
     families.reduce((count, family) => count + family.variants.length, 0),
-    750,
+    793,
   );
 
   const filtered = filterCatalogVariants(items, {
@@ -103,6 +130,28 @@ test("validator rejects unsupported taxonomy and trade terms", () => {
   assert.ok(result.issues.some((issue) => issue.message === "Unsupported catalogue category."));
   assert.ok(result.issues.some((issue) => issue.field === "origin_country"));
   assert.ok(result.issues.some((issue) => issue.message.includes("MADE-UP")));
+});
+
+test("validator rejects animal-derived products from the vegan catalogue", () => {
+  const sample = structuredClone(raw.slice(0, 1));
+  sample[0].product_name = "Dairy Milk";
+  const result = validateCatalogue(sample);
+  assert.ok(result.issues.some((issue) => issue.message.includes("other than honey")));
+});
+
+test("validator permits honey as the sole animal-derived exception", () => {
+  const honeyRecords = raw.filter((record) => record.product_name.startsWith("Honey"));
+  assert.equal(honeyRecords.length, 6);
+  assert.deepEqual(validateCatalogue(honeyRecords).issues, []);
+});
+
+test("validator recognizes cocoa butter as a plant ingredient without weakening dairy rejection", () => {
+  const cocoaButter = raw.filter((record) => record.product_name === "Cocoa Butter");
+  assert.equal(cocoaButter.length, 1);
+  assert.deepEqual(validateCatalogue(cocoaButter).issues, []);
+  const dairyButter = structuredClone(cocoaButter);
+  dairyButter[0].product_name = "Dairy Butter";
+  assert.ok(validateCatalogue(dairyButter).issues.some((issue) => issue.message.includes("other than honey")));
 });
 
 test("the advertised RFQ template exists", async () => {

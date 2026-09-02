@@ -33,9 +33,10 @@ const requiredStrings = stringFields.filter(
   (field) => field !== "variant" && field !== "hs_code_hint",
 );
 
-const supportedCategories = new Set(["Cereals & Grains", "Dehydrated & Processed", "Fresh Fruits", "Fresh Vegetables", "Nuts & Dry Fruits", "Oilseeds & Oils", "Pulses & Lentils", "Spices & Herbs", "Sweeteners"]);
+const supportedCategories = new Set(["Cereals & Grains", "Coffee", "Dehydrated & Processed", "Fresh Fruits", "Fresh Vegetables", "Nuts & Dry Fruits", "Oilseeds & Oils", "Pulses & Lentils", "Spices & Herbs", "Sweeteners", "Tea"]);
 const supportedIncoterms = new Set(["EXW", "FCA", "CPT", "CIP", "DAP", "DPU", "DDP", "FAS", "FOB", "CFR", "CIF"]);
 const semicolonFields = ["incoterms_supported", "key_quality_parameters", "key_safety_tests", "certifications_available", "use_cases"] as const;
+const nonVeganIdentity = /\b(?:animal|beef|butter|chicken|dairy|egg|fish|gelatin|ghee|lamb|meat|milk|mutton|pork|poultry|seafood|shellfish|shrimp)\b/i;
 
 function normalizedString(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
@@ -90,6 +91,11 @@ export function validateCatalogue(input: unknown): CatalogueValidationResult {
     }
     if (record.origin_country !== "India") {
       issues.push({ index, field: "origin_country", message: "Unsupported or unexpected origin country." });
+    }
+    const productIdentity = [record.category, record.sub_category, record.product_name, record.variant, record.form].join(" ");
+    const identityForAnimalCheck = productIdentity.replace(/\bcocoa butter\b/gi, "cocoa fat");
+    if (nonVeganIdentity.test(identityForAnimalCheck)) {
+      issues.push({ index, field: "product_name", message: "Animal-derived products other than honey are not allowed." });
     }
     for (const field of semicolonFields) {
       if (record[field].split(";").some((part) => !part.trim())) {

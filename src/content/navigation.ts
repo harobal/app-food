@@ -27,6 +27,8 @@ export const foodsCategoriesNav: Array<{ label: string; category: string }> = [
   { label: "Fresh Fruits", category: "Fresh Fruits" },
   { label: "Fresh Vegetables", category: "Fresh Vegetables" },
   { label: "Sweeteners", category: "Sweeteners" },
+  { label: "Tea", category: "Tea" },
+  { label: "Coffee", category: "Coffee" },
 ];
 
 export const foodsNav: FoodsNavItem[] = [
@@ -41,6 +43,7 @@ export const foodsNav: FoodsNavItem[] = [
       })),
     ],
   },
+  { type: "link", label: "Knowledge", href: "/knowledge" },
   { type: "link", label: "Quality", href: "/quality" },
   { type: "link", label: "Logistics", href: "/logistics" },
   { type: "link", label: "Services", href: "/services" },

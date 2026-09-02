@@ -7,20 +7,38 @@ import type {
 } from "../domain/types.ts";
 import { getFamilyMedia } from "../data/media.ts";
 
-const splitParam = (value: string | null) =>
-  value
-    ? Array.from(new Set(value.split(",").map((part) => part.trim()).filter(Boolean)))
-    : [];
+function splitParam(params: URLSearchParams, key: string, supportedOptions?: string[]): string[] {
+  const all = params.getAll(key);
+  if (all.length > 1) {
+    return Array.from(new Set(all.map((item) => item.trim()).filter(Boolean)));
+  }
+  const single = params.get(key);
+  if (!single) return [];
+  // If the single value directly matches a known supported option (even if it contains commas), preserve it
+  if (supportedOptions && supportedOptions.includes(single)) {
+    return [single];
+  }
+  // Otherwise split by comma for comma-delimited parameter support
+  const parts = single.split(",").map((part) => part.trim()).filter(Boolean);
+  if (supportedOptions) {
+    // If splitting by comma broke a valid option, check if the full single string is supported
+    if (supportedOptions.includes(single)) return [single];
+  }
+  return Array.from(new Set(parts));
+}
 
-export function parseCatalogFilters(params: URLSearchParams): FoodsCatalogFilters {
+export function parseCatalogFilters(
+  params: URLSearchParams,
+  options?: { categories?: string[]; forms?: string[]; origins?: string[]; certifications?: string[] },
+): FoodsCatalogFilters {
   const requestedSort = params.get("sort");
   const requestedPage = Number.parseInt(params.get("page") ?? "1", 10);
   return {
     query: (params.get("q") ?? "").trim(),
-    categories: splitParam(params.get("category")),
-    forms: splitParam(params.get("form")),
-    origins: splitParam(params.get("origin")),
-    certifications: splitParam(params.get("cert")),
+    categories: splitParam(params, "category", options?.categories),
+    forms: splitParam(params, "form", options?.forms),
+    origins: splitParam(params, "origin", options?.origins),
+    certifications: splitParam(params, "cert", options?.certifications),
     sort: requestedSort === "title-asc" ? "title-asc" : "featured",
     page: Number.isFinite(requestedPage) && requestedPage > 0 ? requestedPage : 1,
   };
@@ -29,16 +47,43 @@ export function parseCatalogFilters(params: URLSearchParams): FoodsCatalogFilter
 export function serializeCatalogFilters(filters: FoodsCatalogFilters) {
   const params = new URLSearchParams();
   if (filters.query) params.set("q", filters.query);
-  if (filters.categories.length) params.set("category", filters.categories.join(","));
-  if (filters.forms.length) params.set("form", filters.forms.join(","));
-  if (filters.origins.length) params.set("origin", filters.origins.join(","));
-  if (filters.certifications.length) params.set("cert", filters.certifications.join(","));
+  if (filters.categories.length) {
+    if (filters.categories.length === 1) {
+      params.set("category", filters.categories[0]);
+    } else {
+      filters.categories.forEach((val) => params.append("category", val));
+    }
+  }
+  if (filters.forms.length) {
+    if (filters.forms.length === 1) {
+      params.set("form", filters.forms[0]);
+    } else {
+      filters.forms.forEach((val) => params.append("form", val));
+    }
+  }
+  if (filters.origins.length) {
+    if (filters.origins.length === 1) {
+      params.set("origin", filters.origins[0]);
+    } else {
+      filters.origins.forEach((val) => params.append("origin", val));
+    }
+  }
+  if (filters.certifications.length) {
+    if (filters.certifications.length === 1) {
+      params.set("cert", filters.certifications[0]);
+    } else {
+      filters.certifications.forEach((val) => params.append("cert", val));
+    }
+  }
   if (filters.sort !== "featured") params.set("sort", filters.sort);
   if (filters.page > 1) params.set("page", String(filters.page));
   return params;
 }
 
-export function sanitizeCatalogFilters(filters: FoodsCatalogFilters, options: { categories: string[]; forms: string[]; origins: string[]; certifications: string[] }): FoodsCatalogFilters {
+export function sanitizeCatalogFilters(
+  filters: FoodsCatalogFilters,
+  options: { categories: string[]; forms: string[]; origins: string[]; certifications: string[] },
+): FoodsCatalogFilters {
   const allowed = (values: string[], supported: string[]) => values.filter((value) => supported.includes(value));
   return {
     ...filters,

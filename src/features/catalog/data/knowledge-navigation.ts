@@ -1,0 +1,15 @@
+export const knowledgeCentres=[
+ {href:"/knowledge/rice",title:"Rice",description:"Variety, processing, grain quality and source-backed RFQ controls."},
+ {href:"/knowledge/grains",title:"Grains & millets",description:"Botanical identity, form, gluten status, quality and safety."},
+ {href:"/knowledge/pulses",title:"Pulses & lentils",description:"Species, trade names, whole/split/flour forms and specifications."},
+ {href:"/knowledge/spices",title:"Spices & herbs",description:"Botanical identity, plant part, form, adulteration and safety."},
+ {href:"/knowledge/nuts-dried-fruits",title:"Nuts & dried fruits",description:"Identity, kernel style, defects, allergens and lot controls."},
+ {href:"/knowledge/oilseeds-oils",title:"Oilseeds & edible oils",description:"Food-use class, extraction, refining, authenticity and quality."},
+ {href:"/knowledge/dehydrated-processed",title:"Dehydrated foods",description:"Drying, cut or mesh, rehydration, carriers and microbiology."},
+ {href:"/knowledge/processed-plant-foods",title:"Processed plant foods",description:"Formula, vegan status, allergens, process and lot evidence."},
+ {href:"/knowledge/fresh-fruits",title:"Fresh fruits",description:"Cultivar, maturity, residues, packhouse and cold chain."},
+ {href:"/knowledge/fresh-vegetables",title:"Fresh vegetables",description:"Cultivar/use class, grade, residues and arrival condition."},
+ {href:"/knowledge/sweeteners",title:"Sweeteners",description:"Sugar and jaggery identity, plus honey as a disclosed non-vegan exception."},
+ {href:"/knowledge/tea",title:"Tea",description:"Manufacture, leaf style, garden, origin controls and sensory approval."},
+ {href:"/knowledge/coffee",title:"Coffee",description:"Species, processing type, grade, defects, estate and cup approval."},
+] as const;

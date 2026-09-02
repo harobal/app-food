@@ -38,6 +38,7 @@ export function FoodsFooter() {
           <h4 className="font-semibold text-white">Explore</h4>
           <ul className="space-y-2 text-sm text-white/82">
             <li><FoodsLink href="/catalog" className="hover:text-secondary">Catalogue</FoodsLink></li>
+            <li><FoodsLink href="/knowledge" className="hover:text-secondary">Product knowledge</FoodsLink></li>
             <li><FoodsLink href="/quality" className="hover:text-secondary">Quality</FoodsLink></li>
             <li><FoodsLink href="/logistics" className="hover:text-secondary">Logistics</FoodsLink></li>
             <li><FoodsLink href="/services" className="hover:text-secondary">Services</FoodsLink></li>

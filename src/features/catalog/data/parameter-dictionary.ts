@@ -1,0 +1,27 @@
+import type { ParameterDefinition } from "../domain/knowledge-types.ts";
+
+export const parameterDictionary = [
+  { key: "moisture", label: "Moisture", description: "Moisture content at the stated test condition.", valueType: "number", allowedUnits: ["%"], appliesTo: ["all"], comparisonPriority: 10, buyerFacing: true, requiresSource: true },
+  { key: "purity", label: "Purity", description: "Share of the lot conforming to the declared product identity.", valueType: "number", allowedUnits: ["%"], appliesTo: ["grains", "pulses", "spices", "oilseeds"], comparisonPriority: 20, buyerFacing: true, requiresSource: true },
+  { key: "foreign-matter", label: "Foreign matter", description: "Extraneous material measured using the declared method.", valueType: "number", allowedUnits: ["%"], appliesTo: ["grains", "pulses", "spices", "oilseeds"], comparisonPriority: 30, buyerFacing: true, requiresSource: true },
+  { key: "grain-length", label: "Average grain length", description: "Average uncooked kernel length.", valueType: "number", allowedUnits: ["mm"], appliesTo: ["rice"], comparisonPriority: 10, buyerFacing: true, requiresSource: true },
+  { key: "broken-grains", label: "Broken grains", description: "Broken kernel share under the declared grading method.", valueType: "number", allowedUnits: ["%"], appliesTo: ["rice", "grains"], comparisonPriority: 20, buyerFacing: true, requiresSource: true },
+  { key: "varietal-purity", label: "Varietal purity", description: "Share matching the declared cultivar or variety.", valueType: "number", allowedUnits: ["%"], appliesTo: ["rice", "grains"], comparisonPriority: 30, buyerFacing: true, requiresSource: true },
+  { key: "elongation-ratio", label: "Cooking elongation", description: "Ratio of cooked to uncooked grain length under a stated method.", valueType: "number", allowedUnits: ["ratio"], appliesTo: ["rice"], comparisonPriority: 40, buyerFacing: true, requiresSource: true },
+  { key: "seed-size", label: "Seed or kernel size", description: "Declared dimensional grade for seeds, kernels, or pulses.", valueType: "range", allowedUnits: ["mm", "count/100g"], appliesTo: ["pulses", "spices", "oilseeds", "nuts"], comparisonPriority: 10, buyerFacing: true, requiresSource: true },
+  { key: "active-compound", label: "Active compound", description: "Named characteristic compound with the stated test method.", valueType: "number", allowedUnits: ["%", "ppm"], appliesTo: ["spices", "functional-ingredients"], comparisonPriority: 10, buyerFacing: true, requiresSource: true },
+  { key: "asta-color", label: "ASTA colour value", description: "Colour value measured using the applicable ASTA method.", valueType: "number", allowedUnits: ["ASTA"], appliesTo: ["spices"], comparisonPriority: 20, buyerFacing: true, requiresSource: true },
+  { key: "scoville-heat", label: "Heat level", description: "Declared pungency using Scoville Heat Units.", valueType: "range", allowedUnits: ["SHU"], appliesTo: ["chilli"], comparisonPriority: 30, buyerFacing: true, requiresSource: true },
+  { key: "volatile-oil", label: "Volatile oil", description: "Volatile oil content under the declared test method.", valueType: "number", allowedUnits: ["%"], appliesTo: ["spices"], comparisonPriority: 40, buyerFacing: true, requiresSource: true },
+  { key: "oil-content", label: "Oil content", description: "Extractable oil share under the declared method.", valueType: "number", allowedUnits: ["%"], appliesTo: ["oilseeds", "nuts"], comparisonPriority: 20, buyerFacing: true, requiresSource: true },
+  { key: "protein-content", label: "Protein content", description: "Protein share under the declared analytical method.", valueType: "number", allowedUnits: ["%"], appliesTo: ["pulses", "grains", "oilseeds"], comparisonPriority: 30, buyerFacing: true, requiresSource: true },
+  { key: "aflatoxin-b1", label: "Aflatoxin B1", description: "Aflatoxin B1 result or contractual limit for a defined market.", valueType: "number", allowedUnits: ["ppb", "µg/kg"], appliesTo: ["nuts", "oilseeds", "spices", "grains"], comparisonPriority: 80, buyerFacing: true, requiresSource: true },
+  { key: "total-aflatoxins", label: "Total aflatoxins", description: "Total aflatoxin result or contractual limit for a defined market.", valueType: "number", allowedUnits: ["ppb", "µg/kg"], appliesTo: ["nuts", "oilseeds", "spices", "grains"], comparisonPriority: 81, buyerFacing: true, requiresSource: true },
+  { key: "brix", label: "Soluble solids", description: "Soluble solids used as a maturity or sweetness indicator.", valueType: "range", allowedUnits: ["°Bx"], appliesTo: ["fresh-fruit"], comparisonPriority: 10, buyerFacing: true, requiresSource: true },
+  { key: "produce-size", label: "Produce size", description: "Diameter, weight, or count grade for fresh produce.", valueType: "range", allowedUnits: ["mm", "g", "count/carton"], appliesTo: ["fresh-fruit", "fresh-vegetable"], comparisonPriority: 20, buyerFacing: true, requiresSource: true },
+  { key: "icumsa-color", label: "ICUMSA colour", description: "Sugar colour value under the declared ICUMSA method.", valueType: "number", allowedUnits: ["IU"], appliesTo: ["sugar"], comparisonPriority: 10, buyerFacing: true, requiresSource: true },
+] as const satisfies readonly ParameterDefinition[];
+
+export const parameterByKey: ReadonlyMap<string, ParameterDefinition> = new Map(
+  parameterDictionary.map((parameter) => [parameter.key, parameter]),
+);

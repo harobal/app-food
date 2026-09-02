@@ -56,6 +56,16 @@ const CATEGORY_IMAGES: Record<string, string[]> = {
     "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=2000&q=80",
     "https://images.unsplash.com/photo-1605979399890-5d9dd8b10b3b?auto=format&fit=crop&w=2000&q=80",
   ],
+  Tea: [
+    "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&w=2000&q=80",
+    "https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?auto=format&fit=crop&w=2000&q=80",
+    "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=2000&q=80",
+  ],
+  Coffee: [
+    "/media/harvest-meridian/coffee.webp",
+    "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=2000&q=80",
+    "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=2000&q=80",
+  ],
 };
 
 const FALLBACK_IMAGES = [
@@ -98,6 +108,31 @@ function safeNumber(value: unknown) {
 
 function recordToProduct(record: FoodsCatalogRecord): FoodsCatalogProduct {
   const titleBase = record.variant ? `${record.product_name} — ${record.variant}` : record.product_name;
+  const originState = record.slug.startsWith("rice-basmati-")
+    ? "Basmati GI area"
+    : record.category === "Cereals & Grains" && !record.slug.startsWith("rice-")
+      ? "Exact crop and lot origin to confirm"
+    : record.category === "Pulses & Lentils"
+      ? "India — exact origin to confirm"
+      : record.category === "Spices & Herbs"
+        ? "Exact lot origin to confirm"
+        : record.category === "Nuts & Dry Fruits"
+          ? "Exact lot origin to confirm"
+          : record.category === "Oilseeds & Oils"
+            ? "Exact lot origin to confirm"
+            : record.category === "Dehydrated & Processed"
+              ? "Exact lot origin to confirm"
+              : record.category === "Fresh Fruits"
+                ? "Exact orchard and packhouse to confirm"
+                : record.category === "Fresh Vegetables"
+                  ? "Exact farm and packhouse to confirm"
+                  : record.category === "Sweeteners"
+                    ? "Exact source and lot origin to confirm"
+                    : record.category === "Tea"
+                      ? "Exact garden/factory and invoice lot to confirm"
+                      : record.category === "Coffee"
+                        ? "Exact estate/curing works and shipment lot to confirm"
+      : record.origin_state;
 
   const images = pickImages(record.category, record.slug);
 
@@ -109,7 +144,7 @@ function recordToProduct(record: FoodsCatalogRecord): FoodsCatalogProduct {
         .filter(Boolean)
     : [];
 
-  const subtitleParts = [record.form, record.grade, record.origin_state ? `${record.origin_state}, ${record.origin_country}` : record.origin_country].filter(Boolean);
+  const subtitleParts = [record.form, record.grade, originState ? `${originState}, ${record.origin_country}` : record.origin_country].filter(Boolean);
 
   const summary =
     record.category === "Fresh Fruits" || record.category === "Fresh Vegetables"
@@ -125,7 +160,7 @@ function recordToProduct(record: FoodsCatalogRecord): FoodsCatalogProduct {
     { label: "Form", value: record.form },
     { label: "Grade", value: record.grade },
     ...(record.hs_code_hint ? [{ label: "HS code (hint)", value: record.hs_code_hint } satisfies FoodsSpecRow] : []),
-    { label: "Origin", value: `${record.origin_state}, ${record.origin_country}` },
+    { label: "Origin", value: (record.category === "Cereals & Grains" && !record.slug.startsWith("rice-")) || ["Pulses & Lentils", "Spices & Herbs", "Nuts & Dry Fruits", "Oilseeds & Oils", "Dehydrated & Processed", "Fresh Fruits", "Fresh Vegetables", "Sweeteners", "Tea", "Coffee"].includes(record.category) ? originState : `${originState}, ${record.origin_country}${record.slug.startsWith("rice-basmati-") ? " — exact GI-area origin to confirm" : ""}` },
     { label: "Seasonality", value: record.seasonality },
     { label: "Processing", value: record.processing },
     { label: "Packaging", value: record.packaging },
@@ -151,7 +186,7 @@ function recordToProduct(record: FoodsCatalogRecord): FoodsCatalogProduct {
     grade: record.grade,
     variant: record.variant || undefined,
     originCountry: record.origin_country,
-    originState: record.origin_state,
+    originState,
     seasonality: record.seasonality,
     processing: record.processing,
     packaging: record.packaging,
@@ -208,7 +243,7 @@ export function getFoodsCatalog(): FoodsCatalogProduct[] {
 
   const records = assertValidCatalogue(rawCatalogue).map(normalizeRecord);
   const full = records
-    .filter((r) => r.slug && r.id)
+    .filter((r) => r.slug && r.id && r.product_name !== "Castor Seed")
     .map(recordToProduct);
 
   cachedFull = full;
